@@ -7,7 +7,8 @@ import ProgressBar from './ProgressBar';
 import { PlayIcon, PlusIcon, CheckIcon, TrashIcon, InfoIcon } from './icons';
 import './ContentCard.css';
 
-export default function ContentCard({ item, progress, removable = false }) {
+// captionInside puts the title on the artwork instead of the type label beneath it.
+export default function ContentCard({ item, progress, removable = false, captionInside = false }) {
   const { t, lang } = useI18n();
   const { isInList, toggleList, removeFromList } = useAppState();
   const saved = isInList(item.id);
@@ -24,7 +25,7 @@ export default function ContentCard({ item, progress, removable = false }) {
     .join(' • ');
 
   return (
-    <div className="content-card">
+    <div className={`content-card${captionInside ? ' content-card--caption-inside' : ''}`}>
       {/* The slot holds the artwork's ratio and never changes size. __frame grows out of it
           on hover — wider and taller — so a hovered card reflows nothing around it. */}
       <div className="content-card__slot">
@@ -40,6 +41,8 @@ export default function ContentCard({ item, progress, removable = false }) {
               </div>
             )}
           </Link>
+
+          {captionInside && <p className="content-card__caption">{item.title[lang]}</p>}
 
           <div className="content-card__info">
             <p className="content-card__title">{item.title[lang]}</p>
@@ -80,10 +83,13 @@ export default function ContentCard({ item, progress, removable = false }) {
 
       {/* Resting caption, outside the artwork so the frame's overflow clip cannot reach it.
           A link of its own rather than part of the media link above, kept out of the tab
-          order so it does not become a second stop for the same destination. */}
-      <Link to={detailsHref} className="content-card__label" tabIndex={-1} aria-hidden="true">
-        {t(TYPE_LABEL_KEY[item.type] || 'search.movies')}
-      </Link>
+          order so it does not become a second stop for the same destination. The
+          caption-inside variant carries its title on the artwork instead. */}
+      {!captionInside && (
+        <Link to={detailsHref} className="content-card__label" tabIndex={-1} aria-hidden="true">
+          {t(TYPE_LABEL_KEY[item.type] || 'search.movies')}
+        </Link>
+      )}
     </div>
   );
 }

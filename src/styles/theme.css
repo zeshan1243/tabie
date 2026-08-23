@@ -93,10 +93,14 @@
   --bg-elevated: #193bac;
   --bg-hero-scrim: rgba(2, 16, 68, 0.94);
 
-  /* The wash has to read as depth *behind* a mid-navy page, so it goes deeper than
-     the guidelines' own #031047 rather than matching it. */
-  --nav-atmosphere-rgb: 1 7 34;
-  --nav-atmosphere-rest: 0.62;
+  /* #031047 — the guidelines' own "deep background shade" (p.12 Secondary). Going darker
+     than this (it was 1 7 34, effectively black) made the nav read as a black column laid
+     over a bright navy page rather than as part of the theme. Staying in the navy family
+     means the gutter is nearly invisible over the page itself and only does visible work
+     where it needs to: darkening bright hero art behind the icons. The rest opacity is
+     higher than midnight's to compensate for the lighter wash colour. */
+  --nav-atmosphere-rgb: 3 16 71;
+  --nav-atmosphere-rest: 0.72;
 
   /* Lighter surfaces need slightly stronger hairlines to stay visible. */
   --border-subtle: rgba(255, 255, 255, 0.13);

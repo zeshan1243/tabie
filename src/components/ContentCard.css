@@ -283,3 +283,31 @@
     display: none;
   }
 }
+
+/* ---- Caption-inside variant (Search) ------------------------------------------------ */
+/* The title sits on the artwork rather than as a type label beneath it, so the resting
+   scrim goes deeper than a rail card's to carry it. */
+.content-card--caption-inside .content-card__overlay {
+  opacity: 0.62;
+}
+
+/* Steps aside on hover so it cannot collide with the info block's own title rising into
+   the same corner. */
+.content-card__caption {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  padding: 12px 14px;
+  font-size: 13.5px;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #fff;
+  text-shadow: 0 1px 10px rgb(var(--bg-0-rgb) / 0.9);
+  pointer-events: none;
+  transition: opacity 200ms ease;
+}
+
+.content-card--caption-inside:hover .content-card__caption,
+.content-card--caption-inside:focus-within .content-card__caption {
+  opacity: 0;
+}

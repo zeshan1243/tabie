@@ -27,7 +27,11 @@
      full width. (The flex row originally existed so a card growing on hover could push its
      neighbours aside; the hover mechanic no longer touches layout, so nothing needs it.) */
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  /* Floor raised from 210px so the tracks land near the home rails' card width
+     (clamp(210px, 17.8vw, 300px)) rather than well under it. The hover growth is a
+     percentage, so a smaller resting card was the whole reason expanding felt weaker
+     here than on the home page. */
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   align-items: start;
   gap: 24px 14px;
 }

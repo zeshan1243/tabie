@@ -57,41 +57,93 @@
   color: var(--text-primary);
 }
 
-.search-genre-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 12px;
+/* One scrolling line of small pills rather than a wrapping grid of tiles. The arrows sit
+   outside the track, so the chips scroll under nothing and the row never grows taller. */
+.search-genre-rail {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
-.search-genre-tile {
-  padding: 20px 16px;
-  border-radius: var(--radius-md);
-  background: var(--bg-2);
-  border: 1px solid var(--border-subtle);
+.search-genre-track {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  /* The whole point: never wrap to a second line. */
+  flex-wrap: nowrap;
+  scroll-snap-type: x proximity;
+  padding-block: 2px;
+}
+
+.search-genre-chip {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  padding: 8px 15px;
+  border-radius: var(--radius-pill);
+  border: none;
+  background: rgba(255, 255, 255, 0.08);
   color: var(--text-primary);
-  font-weight: 700;
-  font-size: 14px;
-  text-align: start;
-  transition: background var(--dur-fast) var(--ease-premium), border-color var(--dur-fast) var(--ease-premium),
-    color var(--dur-fast) var(--ease-premium);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background var(--dur-fast) var(--ease-premium), color var(--dur-fast) var(--ease-premium);
 }
 
-.search-genre-tile:hover {
-  background: var(--bg-3);
-  border-color: var(--accent-gold);
+.search-genre-chip:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+/* Selected reads as inverted rather than merely tinted, so it is unmistakable at this size. */
+.search-genre-chip.is-active {
+  background: var(--accent-gold);
+  color: var(--text-on-gold);
+}
+
+.search-genre-nav {
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-subtle);
+  background: rgb(var(--bg-0-rgb) / 0.6);
+  color: var(--text-secondary);
+  transition: color var(--dur-fast), border-color var(--dur-fast), background var(--dur-fast);
+}
+
+.search-genre-nav:hover {
   color: var(--accent-gold);
+  border-color: var(--accent-gold);
+  background: rgb(var(--bg-0-rgb) / 0.85);
+}
+
+.search-genre-nav svg {
+  width: 15px;
+  height: 15px;
+}
+
+/* Touch scrolls the row directly, so the arrows are dead weight there. */
+@media (max-width: 720px) {
+  .search-genre-nav {
+    display: none;
+  }
 }
 
 .search-grid {
-  /* Grid, not a wrapping flex row. Fixed-width cards in a flex row left whatever did not
-     divide evenly as dead space at the row's end — a visible empty gutter on wide screens.
-     1fr tracks share that remainder out across the cards instead, so every row spans the
-     full width. (The flex row originally existed so a card growing on hover could push its
-     neighbours aside; the hover mechanic no longer touches layout, so nothing needs it.) */
+  /* Uniform grid with 1fr tracks: fixed-width cards in a flex row left whatever did not
+     divide evenly as dead space at the row's end, a visible empty gutter on wide screens. */
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  /* Floor raised from 210px so the tracks land near the home rails' card width
+     (clamp(210px, 17.8vw, 300px)) rather than well under it. The hover growth is a
+     percentage, so a smaller resting card was the whole reason expanding felt weaker
+     here than on the home page. */
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   align-items: start;
-  gap: 20px 14px;
+  /* Even both ways — the cards carry their title inside now, so there is no caption line
+     under them needing extra room. */
+  gap: 14px;
 }
 
 /* Let the grid track set the width rather than the card's own clamp. */
