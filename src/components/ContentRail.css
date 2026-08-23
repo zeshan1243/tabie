@@ -1,0 +1,101 @@
+.rail {
+  margin-block: 34px;
+}
+
+.rail__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.rail__title {
+  font-size: clamp(17px, 2vw, 21px);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.rail__see-all {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  transition: color var(--dur-fast);
+}
+
+.rail__see-all:hover {
+  color: var(--accent-gold);
+}
+
+.rail__viewport {
+  position: relative;
+}
+
+.rail__track {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  overflow-x: auto;
+  overflow-y: visible;
+  scroll-snap-type: x proximity;
+  padding-block: 6px 14px;
+}
+
+.rail__track > * {
+  scroll-snap-align: start;
+}
+
+.rail__nav {
+  position: absolute;
+  top: 0;
+  bottom: 14px;
+  width: 64px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  z-index: 6;
+  opacity: 0;
+  transition: opacity var(--dur-fast) var(--ease-premium);
+}
+
+.rail__nav--prev {
+  inset-inline-start: 0;
+  background: linear-gradient(90deg, var(--bg-0) 10%, transparent 100%);
+}
+
+/* Above the mobile breakpoint, the fixed sidebar overlaps the viewport's start edge
+   (see .container in global.css) — without this offset the prev button's hit area
+   sits under the sidebar, so hovering/clicking it opens the sidebar instead. */
+@media (min-width: 901px) {
+  .rail__nav--prev {
+    inset-inline-start: var(--content-inset-start);
+  }
+}
+
+[dir='rtl'] .rail__nav--prev {
+  background: linear-gradient(270deg, var(--bg-0) 10%, transparent 100%);
+}
+
+.rail__nav--next {
+  inset-inline-end: 0;
+  background: linear-gradient(270deg, var(--bg-0) 10%, transparent 100%);
+}
+
+[dir='rtl'] .rail__nav--next {
+  background: linear-gradient(90deg, var(--bg-0) 10%, transparent 100%);
+}
+
+.rail__viewport:hover .rail__nav {
+  opacity: 1;
+}
+
+.rail__nav:hover {
+  color: var(--accent-gold);
+}
+
+@media (max-width: 720px) {
+  .rail__nav {
+    display: none;
+  }
+}

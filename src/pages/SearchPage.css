@@ -1,0 +1,104 @@
+.search-page {
+  padding-block: 32px 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.search-section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.search-section__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.search-section h2 {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.search-clear {
+  background: none;
+  border: none;
+  color: var(--text-tertiary);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.search-clear:hover {
+  color: var(--accent-gold);
+}
+
+.search-recent-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.search-recent-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-2);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.search-recent-chip:hover {
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+
+.search-genre-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.search-genre-tile {
+  padding: 20px 16px;
+  border-radius: var(--radius-md);
+  background: var(--bg-2);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: 14px;
+  text-align: start;
+  transition: background var(--dur-fast) var(--ease-premium), border-color var(--dur-fast) var(--ease-premium),
+    color var(--dur-fast) var(--ease-premium);
+}
+
+.search-genre-tile:hover {
+  background: var(--bg-3);
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+}
+
+.search-grid {
+  /* A wrapping flex row (not CSS Grid) so a hovered/expanded card actually pushes its
+     neighbors aside via normal reflow, matching the Home rails — grid tracks are fixed
+     and don't reflow when one item's width grows, which just made it overlap instead. */
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 20px 14px;
+}
+
+.search-results-count {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.search-browse {
+  display: flex;
+  flex-direction: column;
+  gap: 34px;
+}

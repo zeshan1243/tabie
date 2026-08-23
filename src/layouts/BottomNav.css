@@ -1,0 +1,33 @@
+.bottom-nav {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    inset-inline: 0;
+    z-index: 100;
+    background: rgba(6, 10, 30, 0.94);
+    backdrop-filter: blur(16px);
+    border-top: 1px solid var(--border-subtle);
+    padding: 8px 4px calc(8px + env(safe-area-inset-bottom));
+  }
+
+  .bottom-nav__link {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    padding: 4px;
+  }
+
+  .bottom-nav__link.is-active {
+    color: var(--accent-gold);
+  }
+}

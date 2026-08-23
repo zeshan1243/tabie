@@ -1,0 +1,31 @@
+.my-list-page {
+  padding-block: 40px 60px;
+  min-height: 60vh;
+}
+
+.my-list-page__head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+.my-list-page__head h1 {
+  font-size: clamp(24px, 3vw, 32px);
+  font-weight: 700;
+}
+
+.my-list-page__count {
+  color: var(--text-tertiary);
+  font-size: 14px;
+}
+
+.my-list-page__grid {
+  /* A wrapping flex row (not CSS Grid) so a hovered/expanded card actually pushes its
+     neighbors aside via normal reflow, matching the Home rails — grid tracks are fixed
+     and don't reflow when one item's width grows, which just made it overlap instead. */
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 24px 14px;
+}

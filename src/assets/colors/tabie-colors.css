@@ -1,0 +1,24 @@
+:root {
+  /* ---- Primary ---- */
+  --tabie-navy: #03175E;      /* primary brand navy */
+  --tabie-gold: #FEBB00;      /* primary brand gold / accent, play button */
+
+  /* ---- Secondary ---- */
+  --tabie-navy-dark: #031047; /* deep background shade */
+  --tabie-purple: #5E20D8;    /* alt background / gradient */
+  --tabie-purple-deep: #331698; /* gradient / decorative shapes */
+  --tabie-teal: #23D6C3;      /* accent / secondary CTA */
+
+  /* ---- Neutral ---- */
+  --tabie-white: #FFFFFF;
+  --tabie-light-gray: #F2F2F2;
+
+  /* ---- Tints (approx, for lighter UI states) ---- */
+  --tabie-navy-75: #33437B;
+  --tabie-navy-50: #8188A6;
+  --tabie-navy-25: #C0C4D3;
+
+  --tabie-gold-75: #FDCB40;
+  --tabie-gold-50: #FEDD80;
+  --tabie-gold-25: #FEEEBF;
+}

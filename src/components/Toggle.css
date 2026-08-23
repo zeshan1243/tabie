@@ -1,0 +1,29 @@
+.toggle {
+  width: 46px;
+  height: 26px;
+  border-radius: var(--radius-pill);
+  border: none;
+  background: rgba(255, 255, 255, 0.16);
+  position: relative;
+  flex-shrink: 0;
+  transition: background var(--dur-fast) var(--ease-premium);
+}
+
+.toggle__thumb {
+  position: absolute;
+  top: 3px;
+  inset-inline-start: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  transition: inset-inline-start var(--dur-fast) var(--ease-premium);
+}
+
+.toggle.is-on {
+  background: var(--accent-gold);
+}
+
+.toggle.is-on .toggle__thumb {
+  inset-inline-start: 23px;
+}

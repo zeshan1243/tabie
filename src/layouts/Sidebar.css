@@ -1,0 +1,178 @@
+.sidebar {
+  position: fixed;
+  inset-inline-start: 0;
+  top: 0;
+  height: 100vh;
+  width: var(--sidebar-w);
+  z-index: 300;
+  overflow: visible; /* lets the ambient gradient (::before) bleed past the icon column */
+  background: transparent;
+  transition: width 350ms var(--ease-premium), background 350ms var(--ease-premium);
+}
+
+/* Cinematic vignette — extends well beyond the interactive column so the expanded
+   sidebar feels like it fades into the page rather than a hard rectangle. Hidden by
+   default so the collapsed rail stays clean and the hero underneath fully visible;
+   it only fades in once the sidebar is actually open (hover/focus). Pointer-events
+   stay off so even the visible bleed never blocks clicks on the page beneath it. */
+.sidebar::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 0;
+  top: 0;
+  width: var(--sidebar-bleed);
+  height: 100%;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.75) 45%, rgba(0, 0, 0, 0) 100%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 350ms var(--ease-premium);
+  z-index: 0;
+}
+
+[dir='rtl'] .sidebar::before {
+  background: linear-gradient(270deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.75) 45%, rgba(0, 0, 0, 0) 100%);
+}
+
+.sidebar:hover::before,
+.sidebar:focus-within::before {
+  opacity: 1;
+}
+
+/* While expanded, the interactive column itself gets a real (opaque-ish) backdrop so
+   labels stay legible over any hero art, layered on top of the ambient bleed above. */
+.sidebar:hover,
+.sidebar:focus-within {
+  width: var(--sidebar-w-expanded);
+  background: rgba(4, 6, 16, 0.92);
+  backdrop-filter: blur(14px);
+  box-shadow: 12px 0 48px rgba(0, 0, 0, 0.45);
+}
+
+.sidebar__logo {
+  position: absolute;
+  inset-inline-start: 0;
+  top: 20px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding-inline-start: 20px;
+  z-index: 1;
+  /* Keeps the mark readable when collapsed over bright hero art, since the ambient
+     gradient wash is now hover-only rather than always-on. */
+  filter: drop-shadow(0 1px 6px rgba(0, 0, 0, 0.85));
+}
+
+.sidebar__nav {
+  position: absolute;
+  inset-inline-start: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 1;
+}
+
+.sidebar__link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 46px;
+  padding-inline-start: 24px;
+  white-space: nowrap;
+  color: rgba(255, 255, 255, 0.75);
+  transition: color 200ms ease;
+  /* The sidebar itself is overflow:visible (for the ::before gradient bleed below),
+     so without clipping here the invisible (opacity:0) label would still extend this
+     link's hoverable box past the collapsed 72px column — since :hover bubbles up
+     through overflowing descendants, that would trigger the sidebar's own :hover
+     expansion just from moving the mouse near it, not actually over it. */
+  overflow: hidden;
+}
+
+.sidebar__link::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 0%;
+  border-radius: var(--radius-pill);
+  background: var(--accent-gold);
+  transition: height 200ms ease;
+}
+
+.sidebar__link::after {
+  content: '';
+  position: absolute;
+  inset-inline: 4px;
+  inset-block: 2px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.08);
+  opacity: 0;
+  transition: opacity 200ms ease;
+  z-index: -1;
+}
+
+.sidebar__link:hover {
+  color: #fff;
+}
+
+.sidebar__link:hover::before {
+  height: 40%;
+}
+
+.sidebar__link:hover::after {
+  opacity: 1;
+}
+
+.sidebar__link-icon {
+  flex-shrink: 0;
+  transition: transform 200ms ease;
+  /* Keeps icons readable when collapsed over bright hero art, since the ambient
+     gradient wash behind the sidebar is now hover-only rather than always-on. */
+  filter: drop-shadow(0 1px 5px rgba(0, 0, 0, 0.85));
+}
+
+.sidebar__link:hover .sidebar__link-icon {
+  transform: scale(1.15);
+}
+
+.sidebar__link-label {
+  margin-inline-start: 16px;
+  font-size: 13.5px;
+  font-weight: 600;
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: opacity 280ms var(--ease-premium), transform 280ms var(--ease-premium);
+}
+
+[dir='rtl'] .sidebar__link-label {
+  transform: translateX(8px);
+}
+
+.sidebar:hover .sidebar__link-label,
+.sidebar:focus-within .sidebar__link-label {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.sidebar__link.is-active {
+  color: var(--accent-gold);
+}
+
+.sidebar__link.is-active::before {
+  height: 55%;
+}
+
+.sidebar__link.is-active .sidebar__link-label {
+  color: var(--accent-gold);
+}
+
+@media (max-width: 900px) {
+  .sidebar {
+    display: none;
+  }
+}

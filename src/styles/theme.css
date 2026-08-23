@@ -1,0 +1,73 @@
+:root {
+  /* Brand palette — sourced from the canonical design tokens in
+     src/assets/colors/tabie-colors.css (see also tabie-design-tokens.json) */
+  --brand-navy: var(--tabie-navy);
+  --brand-navy-deep: var(--tabie-navy-dark);
+  --brand-gold: var(--tabie-gold);
+  --brand-purple: var(--tabie-purple);
+  --brand-purple-deep: var(--tabie-purple-deep);
+  --brand-teal: var(--tabie-teal);
+
+  /* Surface system — premium dark, tinted toward brand navy rather than pure black */
+  --bg-0: #05081a;
+  --bg-1: #090e26;
+  --bg-2: #0f1533;
+  --bg-3: #161d40;
+  --bg-elevated: #1b2350;
+  --bg-hero-scrim: rgba(4, 7, 22, 0.94);
+
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.16);
+
+  --text-primary: #f6f7fb;
+  --text-secondary: rgba(246, 247, 251, 0.68);
+  --text-tertiary: rgba(246, 247, 251, 0.44);
+  --text-on-gold: #1a1200;
+
+  --accent-gold: var(--brand-gold);
+  --accent-gold-hover: var(--tabie-gold-75);
+  --accent-purple: var(--brand-purple);
+  --accent-purple-soft: #7a45e6;
+  --accent-teal: var(--brand-teal);
+  --accent-danger: #ff5470;
+  --accent-live: #ff3b5c;
+
+  --gradient-hero: linear-gradient(180deg, rgba(5, 8, 26, 0) 0%, rgba(5, 8, 26, 0.55) 55%, var(--bg-0) 100%);
+  --gradient-brand: linear-gradient(120deg, var(--brand-purple-deep) 0%, var(--brand-purple) 45%, var(--brand-teal) 100%);
+  --gradient-card-hover: linear-gradient(180deg, rgba(5, 8, 26, 0) 0%, rgba(5, 8, 26, 0.92) 100%);
+
+  --font-brand: 'Tabie', 'Segoe UI', 'Tahoma', system-ui, sans-serif;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+
+  --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --shadow-card-hover: 0 20px 48px rgba(0, 0, 0, 0.55);
+  --shadow-focus: 0 0 0 3px var(--bg-0), 0 0 0 5px var(--accent-gold);
+
+  --ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 160ms;
+  --dur-med: 280ms;
+  --dur-slow: 480ms;
+
+  --sidebar-w: 72px;
+  --sidebar-w-expanded: 250px;
+  /* The sidebar's ambient gradient visually bleeds well past its own interactive
+     width for a cinematic falloff rather than an abrupt-looking narrow rail. */
+  --sidebar-bleed: 360px;
+  --container-pad: clamp(32px, 3vw, 64px);
+  /* Content's own start-inset (hero copy, rail headers) — kept clear of the floating
+     icon rail without the sidebar itself claiming any page-layout space. */
+  --content-inset-start: clamp(92px, 8vw, 128px);
+}
+
+@media (max-width: 1200px) {
+  :root {
+    --sidebar-w: 60px;
+    --sidebar-w-expanded: 220px;
+    --sidebar-bleed: 300px;
+    --content-inset-start: clamp(80px, 9vw, 104px);
+  }
+}

@@ -1,0 +1,21 @@
+.progress {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.progress--md {
+  height: 4px;
+}
+
+.progress--lg {
+  height: 6px;
+}
+
+.progress__fill {
+  height: 100%;
+  background: var(--accent-gold);
+  border-radius: var(--radius-pill);
+  transition: width var(--dur-med) var(--ease-premium);
+}

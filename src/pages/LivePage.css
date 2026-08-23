@@ -1,0 +1,75 @@
+.live-hero {
+  position: relative;
+  height: 58vh;
+  min-height: 380px;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: flex-end;
+}
+
+.live-hero__scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, var(--bg-0) 5%, rgba(5, 8, 26, 0.3) 55%, rgba(5, 8, 26, 0.7) 100%);
+}
+
+.live-hero__content {
+  position: relative;
+  z-index: 1;
+  padding-bottom: 48px;
+  max-width: 640px;
+}
+
+.live-hero__badges {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.live-hero__channel {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.live-hero__title {
+  font-size: clamp(28px, 4vw, 46px);
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.live-hero__next {
+  color: var(--text-secondary);
+  font-size: 14px;
+  margin-bottom: 22px;
+}
+
+.live-page__grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 32px;
+  padding-block: 40px 60px;
+  align-items: start;
+}
+
+.live-page__heading {
+  font-size: 19px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.live-page__channel-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+@media (max-width: 900px) {
+  .live-page__grid {
+    grid-template-columns: 1fr;
+  }
+}

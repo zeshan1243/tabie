@@ -1,0 +1,137 @@
+.details-hero {
+  position: relative;
+  min-height: 640px;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: flex-end;
+}
+
+.details-hero__scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(0deg, var(--bg-0) 4%, rgba(5, 8, 26, 0.4) 40%, rgba(5, 8, 26, 0.75) 100%),
+    linear-gradient(90deg, rgba(5, 8, 26, 0.9) 5%, rgba(5, 8, 26, 0.2) 60%);
+}
+
+[dir='rtl'] .details-hero__scrim {
+  background:
+    linear-gradient(0deg, var(--bg-0) 4%, rgba(5, 8, 26, 0.4) 40%, rgba(5, 8, 26, 0.75) 100%),
+    linear-gradient(270deg, rgba(5, 8, 26, 0.9) 5%, rgba(5, 8, 26, 0.2) 60%);
+}
+
+.details-hero__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: 36px;
+  padding-bottom: 56px;
+  animation: fadeInUp var(--dur-slow) var(--ease-premium);
+}
+
+.details-hero__poster {
+  width: 220px;
+  aspect-ratio: 2 / 3;
+  border-radius: var(--radius-lg);
+  object-fit: cover;
+  box-shadow: var(--shadow-card-hover);
+  flex-shrink: 0;
+  display: none;
+}
+
+.details-hero__info {
+  max-width: 700px;
+}
+
+.details-hero__type {
+  color: var(--accent-teal);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.details-hero__title {
+  font-size: clamp(30px, 4.4vw, 52px);
+  font-weight: 700;
+  margin-bottom: 16px;
+  line-height: 1.08;
+}
+
+.details-hero__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 18px;
+}
+
+.details-hero__synopsis {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin-bottom: 26px;
+}
+
+.details-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.details-hero__credits {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.details-hero__credits div {
+  display: flex;
+  gap: 8px;
+}
+
+.details-hero__credits dt {
+  color: var(--text-tertiary);
+  min-width: 90px;
+}
+
+.details-hero__credits dd {
+  color: var(--text-secondary);
+}
+
+.details-episodes {
+  padding-block: 44px 20px;
+}
+
+.details-episodes__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.details-episodes__head h2 {
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.details-episodes__list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+@media (min-width: 720px) {
+  .details-hero__poster {
+    display: block;
+  }
+}

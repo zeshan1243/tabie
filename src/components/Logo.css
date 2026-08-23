@@ -1,0 +1,19 @@
+.logo {
+  display: inline-flex;
+  align-items: center;
+}
+
+.logo__mark {
+  display: block;
+  width: auto;
+  height: 34px;
+  filter: drop-shadow(0 2px 10px rgba(3, 23, 94, 0.55));
+}
+
+.logo--sm .logo__mark {
+  height: 26px;
+}
+
+.logo--lg .logo__mark {
+  height: 46px;
+}

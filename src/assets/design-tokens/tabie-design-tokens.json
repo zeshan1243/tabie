@@ -1,0 +1,67 @@
+{
+  "brand": "Tabie (تابع)",
+  "parentCompany": "Qatar Media Corporation",
+  "guidelinesVersion": "v.2 - August 2026",
+  "colors": {
+    "primary": {
+      "navy": { "hex": "#03175E", "rgb": [3, 23, 94], "cmyk": [100, 96, 29, 32], "usage": "Primary brand color, logo, backgrounds, text" },
+      "gold": { "hex": "#FEBB00", "rgb": [254, 187, 0], "cmyk": [0, 29, 100, 0], "usage": "Accent color, play button, CTAs, highlights" }
+    },
+    "secondary": {
+      "darkNavy": { "hex": "#031047", "rgb": [3, 16, 71], "cmyk": [100, 97, 34, 47], "usage": "Deep background shade" },
+      "purple": { "hex": "#5E20D8", "rgb": [94, 32, 216], "cmyk": [76, 82, 0, 0], "usage": "Alternate background / gradient accent" },
+      "deepPurple": { "hex": "#331698", "rgb": [51, 22, 152], "cmyk": [25, 100, 2, 2], "usage": "Gradient / decorative shapes" },
+      "teal": { "hex": "#23D6C3", "rgb": [35, 214, 195], "cmyk": [63, 0, 34, 0], "usage": "Accent, secondary CTA, decorative shapes" }
+    },
+    "neutral": {
+      "white": { "hex": "#FFFFFF" },
+      "lightGray": { "hex": "#F2F2F2", "usage": "Light backgrounds for logo lockups" }
+    }
+  },
+  "tints": {
+    "note": "Each primary/secondary color also has 3 lighter tint steps (~75%, 50%, 25% opacity over white) used for backgrounds and secondary UI elements, as shown in the guideline swatches."
+  },
+  "typography": {
+    "arabic": {
+      "family": "Tabie custom Arabic typeface (proprietary, cut for brand)",
+      "weights": ["Tabie Regular (رفيع/Light)", "Tabie Medium (متوسط)", "Tabie Bold (عريض)"],
+      "note": "Proprietary font shown in guidelines as 'تابع رفيع / متوسط / عريض'. Confirm exact font file/license with the brand agency before using in the app; if unavailable, pick a geometric Arabic sans (e.g. Cairo, IBM Plex Sans Arabic) as a fallback."
+    },
+    "latin": {
+      "family": "Tabie custom Latin companion typeface",
+      "weights": ["Tabie Light", "Tabie Regular", "Tabie Bold"],
+      "note": "Geometric sans-serif shown in guidelines for English usage. Fallback suggestion: Poppins or Gilroy (similar geometric feel)."
+    }
+  },
+  "logo": {
+    "clearSpace": "Maintain clear space on all sides equal to the height of one dot element in the logo mark (see grid: 16 x 18 units, dot module = X).",
+    "minSize": {
+      "print": "100px height minimum",
+      "web": "75px height minimum",
+      "smallUse": "50px acceptable only for thumbnails/favicons"
+    },
+    "doNots": [
+      "Do not rotate the logo",
+      "Do not distort or warp the logo",
+      "Do not change the logo's colors",
+      "Do not change the main typeface / add extra wordmarks next to it",
+      "Do not move the internal position of elements",
+      "Do not add special effects (glow, bevel, shadow) beyond the approved subtle drop-shadow on the loop",
+      "Do not display on busy/low-contrast backgrounds",
+      "Do not display as outline only",
+      "Do not lighten/fade the logo opacity"
+    ],
+    "approvedBackgrounds": ["Navy (#03175E)", "Teal (#23D6C3)", "Purple (#5E20D8)", "Light Gray (#F2F2F2)", "White"]
+  },
+  "slogan": {
+    "arabic": "أكثر من مجرد منصة",
+    "translation": "More than just a platform"
+  },
+  "iconographyLabels": {
+    "scene": "مشهد",
+    "play": "تشغيل",
+    "lens": "عدسة",
+    "studio": "استديو",
+    "lights": "إضاءة"
+  }
+}

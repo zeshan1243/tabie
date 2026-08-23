@@ -1,0 +1,79 @@
+.profile-page {
+  padding-block: 40px 80px;
+  max-width: 720px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.profile-page__heading {
+  font-size: clamp(24px, 3vw, 32px);
+  font-weight: 700;
+}
+
+.profile-section {
+  background: var(--bg-2);
+  border-radius: var(--radius-lg);
+  padding: 22px 24px;
+}
+
+.profile-section h2 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.profile-section__hint {
+  font-size: 13px;
+  color: var(--text-tertiary);
+  margin-bottom: 16px;
+}
+
+.profile-section--account {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.profile-page__avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.profile-page__name {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.profile-page__email {
+  font-size: 13px;
+  color: var(--text-tertiary);
+  margin-bottom: 8px;
+}
+
+.profile-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: 12px;
+  font-size: 14px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.profile-row:first-of-type {
+  border-top: none;
+  padding-top: 4px;
+}
+
+.profile-select {
+  background: var(--bg-1);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  font-size: 13px;
+}

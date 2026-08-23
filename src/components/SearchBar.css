@@ -1,0 +1,57 @@
+.search-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: var(--bg-2);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-pill);
+  padding-inline: 18px;
+  height: 54px;
+  transition: border-color var(--dur-fast);
+}
+
+.search-bar:focus-within {
+  border-color: var(--accent-gold);
+}
+
+.search-bar__icon {
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+}
+
+.search-bar__input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding-inline-start: 12px;
+  font-size: 15px;
+  color: var(--text-primary);
+}
+
+/* The pill container already shows its own gold border via :focus-within — the
+   global :focus-visible ring on the bare input underneath doubled it up. */
+.search-bar__input:focus-visible {
+  box-shadow: none;
+}
+
+.search-bar__input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.search-bar__input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.search-bar__clear {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}

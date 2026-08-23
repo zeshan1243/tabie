@@ -1,0 +1,204 @@
+.featured-card {
+  position: relative;
+  flex: 0 0 auto;
+  width: var(--fc-w, 210px);
+  height: var(--fc-h, 300px);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--bg-2);
+  box-shadow: var(--shadow-card);
+  transition: width 420ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: width;
+}
+
+.featured-card:hover,
+.featured-card:focus-within {
+  width: var(--fc-w-expanded, 440px);
+  box-shadow: 0 28px 64px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(254, 187, 0, 0.35), 0 0 44px rgba(254, 187, 0, 0.16);
+  z-index: 5;
+}
+
+.featured-card__media {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.featured-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 22%;
+  transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.featured-card:hover .featured-card__media img,
+.featured-card:focus-within .featured-card__media img {
+  transform: scale(1.07);
+}
+
+.featured-card__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(3, 6, 20, 0.96) 0%, rgba(3, 6, 20, 0.4) 55%, rgba(3, 6, 20, 0.05) 100%);
+  opacity: 0.7;
+  transition: opacity 420ms ease;
+}
+
+.featured-card:hover .featured-card__overlay,
+.featured-card:focus-within .featured-card__overlay {
+  opacity: 1;
+}
+
+.featured-card__content {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  padding: 18px;
+  pointer-events: none;
+}
+
+.featured-card__content > * {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 280ms ease, transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.featured-card:hover .featured-card__content > *,
+.featured-card:focus-within .featured-card__content > * {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.featured-card__title,
+.featured-card__logo {
+  transition-delay: 60ms;
+}
+
+.featured-card__meta-row {
+  transition-delay: 110ms;
+}
+
+.featured-card__description {
+  transition-delay: 150ms;
+}
+
+.featured-card__actions {
+  transition-delay: 190ms;
+}
+
+.featured-card__title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.featured-card__logo {
+  max-width: 70%;
+  max-height: 44px;
+  object-fit: contain;
+  object-position: left center;
+  margin-bottom: 4px;
+}
+
+.featured-card__meta-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+
+.featured-card__pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.featured-card__pill--outline {
+  border: 1px solid var(--border-strong);
+  color: var(--text-secondary);
+}
+
+.featured-card__pill--gold {
+  background: var(--accent-gold);
+  color: var(--text-on-gold);
+}
+
+.featured-card__metadata {
+  font-size: 11.5px;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.featured-card__description {
+  margin-top: 8px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.featured-card__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.featured-card__action {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border-radius: var(--radius-pill);
+  color: var(--text-primary);
+  transition: background var(--dur-fast), color var(--dur-fast), transform var(--dur-fast);
+}
+
+.featured-card__action:not(.is-primary) {
+  width: 34px;
+  height: 34px;
+  justify-content: center;
+  border: 1.5px solid var(--border-strong);
+}
+
+.featured-card__action:hover {
+  transform: scale(1.06);
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+}
+
+.featured-card__action.is-primary {
+  padding: 8px 16px;
+  background: var(--accent-gold);
+  color: var(--text-on-gold);
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.featured-card__action.is-primary:hover {
+  background: var(--accent-gold-hover);
+  color: var(--text-on-gold);
+}
+
+@media (max-width: 720px) {
+  .featured-card {
+    --fc-w: 150px;
+    --fc-w-expanded: 300px;
+    --fc-h: 225px;
+  }
+
+  .featured-card__description {
+    display: none;
+  }
+}
