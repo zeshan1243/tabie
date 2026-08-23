@@ -8,13 +8,24 @@
   --brand-purple-deep: var(--tabie-purple-deep);
   --brand-teal: var(--tabie-teal);
 
-  /* Surface system — premium dark, tinted toward brand navy rather than pure black */
+  /* Surface system — "midnight" default: premium dark, tinted toward brand navy
+     rather than pure black. Overridden wholesale by [data-theme] blocks below.
+     --bg-0-rgb mirrors --bg-0 as bare channels so scrims can layer it at any alpha. */
   --bg-0: #05081a;
+  --bg-0-rgb: 5 8 26;
   --bg-1: #090e26;
   --bg-2: #0f1533;
   --bg-3: #161d40;
   --bg-elevated: #1b2350;
   --bg-hero-scrim: rgba(4, 7, 22, 0.94);
+
+  /* Navigation atmosphere — the nav has no panel of its own; it sits inside a soft
+     full-height wash that is densest behind the icons and dissolves into the page.
+     Bare channels so the multi-stage gradient can step it down through alpha. */
+  --nav-atmosphere-rgb: 5 7 15;
+  --nav-atmosphere-width: 190px;
+  --nav-atmosphere-width-open: 460px;
+  --nav-atmosphere-rest: 0.58;
 
   --border-subtle: rgba(255, 255, 255, 0.08);
   --border-strong: rgba(255, 255, 255, 0.16);
@@ -32,9 +43,9 @@
   --accent-danger: #ff5470;
   --accent-live: #ff3b5c;
 
-  --gradient-hero: linear-gradient(180deg, rgba(5, 8, 26, 0) 0%, rgba(5, 8, 26, 0.55) 55%, var(--bg-0) 100%);
+  --gradient-hero: linear-gradient(180deg, rgb(var(--bg-0-rgb) / 0) 0%, rgb(var(--bg-0-rgb) / 0.55) 55%, var(--bg-0) 100%);
   --gradient-brand: linear-gradient(120deg, var(--brand-purple-deep) 0%, var(--brand-purple) 45%, var(--brand-teal) 100%);
-  --gradient-card-hover: linear-gradient(180deg, rgba(5, 8, 26, 0) 0%, rgba(5, 8, 26, 0.92) 100%);
+  --gradient-card-hover: linear-gradient(180deg, rgb(var(--bg-0-rgb) / 0) 0%, rgb(var(--bg-0-rgb) / 0.92) 100%);
 
   --font-brand: 'Tabie', 'Segoe UI', 'Tahoma', system-ui, sans-serif;
 
@@ -54,20 +65,50 @@
 
   --sidebar-w: 72px;
   --sidebar-w-expanded: 250px;
-  /* The sidebar's ambient gradient visually bleeds well past its own interactive
-     width for a cinematic falloff rather than an abrupt-looking narrow rail. */
-  --sidebar-bleed: 360px;
   --container-pad: clamp(32px, 3vw, 64px);
-  /* Content's own start-inset (hero copy, rail headers) — kept clear of the floating
-     icon rail without the sidebar itself claiming any page-layout space. */
-  --content-inset-start: clamp(92px, 8vw, 128px);
+  /* Slack inside a card row's scroll box for a hovered card's growth overhang, so the
+     first and last cards aren't shaved off against the clip edge. Must cover the widest
+     card's inline growth (see .content-card__frame). */
+  --track-overhang: 44px;
+  /* The single start-alignment line for all page content — hero copy, section headings,
+     grids, and a rail's cards at rest. A card row pulls its box back by --track-overhang
+     and pads it forward by the same amount (see .rail__track), so it lands here too.
+     Floor: the row's clip edge sits at this minus the overhang, and that has to stay clear
+     of --sidebar-w, so the minimum is sidebar-w + overhang + a little slack. */
+  --content-inset-start: clamp(120px, 8vw, 132px);
+}
+
+/* Brand Navy — the surface ramp is built up from #03175E, the primary background
+   colour in the Tabie brand guidelines (p.12 "Primary Colors"), instead of the
+   near-black midnight ramp. Only the surfaces change; type and accents are shared. */
+:root[data-theme='brand-navy'] {
+  --bg-0: #03175e;
+  --bg-0-rgb: 3 23 94;
+  --bg-1: #051d70;
+  --bg-2: #0a2582;
+  --bg-3: #103098;
+  --bg-elevated: #193bac;
+  --bg-hero-scrim: rgba(2, 16, 68, 0.94);
+
+  /* The wash has to read as depth *behind* a mid-navy page, so it goes deeper than
+     the guidelines' own #031047 rather than matching it. */
+  --nav-atmosphere-rgb: 1 7 34;
+  --nav-atmosphere-rest: 0.62;
+
+  /* Lighter surfaces need slightly stronger hairlines to stay visible. */
+  --border-subtle: rgba(255, 255, 255, 0.13);
+  --border-strong: rgba(255, 255, 255, 0.24);
+
+  --shadow-card: 0 8px 24px rgba(1, 6, 32, 0.45);
+  --shadow-card-hover: 0 20px 48px rgba(1, 6, 32, 0.62);
 }
 
 @media (max-width: 1200px) {
   :root {
     --sidebar-w: 60px;
     --sidebar-w-expanded: 220px;
-    --sidebar-bleed: 300px;
-    --content-inset-start: clamp(80px, 9vw, 104px);
+    --nav-atmosphere-width: 160px;
+    --nav-atmosphere-width-open: 380px;
+    --content-inset-start: clamp(108px, 9vw, 118px);
   }
 }

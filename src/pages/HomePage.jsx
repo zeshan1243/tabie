@@ -42,10 +42,10 @@ export default function HomePage() {
         </section>
         <ContentRail title={t('home.continueWatching')} items={CONTINUE_WATCHING} progressMap={progressMap} />
         <ContentRail title={t('home.trending')} items={TRENDING} seeAllHref="/search?filter=trending" />
-        <ContentRail title={t('home.mostWatched')} items={MOST_WATCHED} orientation="landscape" seeAllHref="/search?filter=mostWatched" />
+        <ContentRail title={t('home.mostWatched')} items={MOST_WATCHED} seeAllHref="/search?filter=mostWatched" />
         <ContentRail title={t('home.newReleases')} items={NEW_RELEASES} seeAllHref="/search?filter=newRelease" />
         <ContentRail title={t('home.series')} items={SERIES_LIST} seeAllHref="/search?type=series" />
-        <ContentRail title={t('home.programs')} items={PROGRAMS_LIST} orientation="landscape" seeAllHref="/search?type=program" />
+        <ContentRail title={t('home.programs')} items={PROGRAMS_LIST} seeAllHref="/search?type=program" />
         <ContentRail title={t('home.documentaries')} items={DOCUMENTARIES_LIST} seeAllHref="/search?type=documentary" />
         <ContentRail title={t('home.kids')} items={KIDS_LIST} seeAllHref="/search?type=kids" />
         <ContentRail title={t('home.recommended')} items={RECOMMENDED} seeAllHref="/search?filter=recommended" />

@@ -61,7 +61,7 @@
 
 .featured-carousel__nav--prev {
   inset-inline-start: 0;
-  background: linear-gradient(90deg, var(--bg-0) 10%, transparent 100%);
+  background: linear-gradient(90deg, var(--bg-0) 10%, rgb(var(--bg-0-rgb) / 0) 100%);
 }
 
 /* Above the mobile breakpoint, the fixed sidebar overlaps the viewport's start edge
@@ -74,16 +74,16 @@
 }
 
 [dir='rtl'] .featured-carousel__nav--prev {
-  background: linear-gradient(270deg, var(--bg-0) 10%, transparent 100%);
+  background: linear-gradient(270deg, var(--bg-0) 10%, rgb(var(--bg-0-rgb) / 0) 100%);
 }
 
 .featured-carousel__nav--next {
   inset-inline-end: 0;
-  background: linear-gradient(270deg, var(--bg-0) 10%, transparent 100%);
+  background: linear-gradient(270deg, var(--bg-0) 10%, rgb(var(--bg-0-rgb) / 0) 100%);
 }
 
 [dir='rtl'] .featured-carousel__nav--next {
-  background: linear-gradient(90deg, var(--bg-0) 10%, transparent 100%);
+  background: linear-gradient(90deg, var(--bg-0) 10%, rgb(var(--bg-0-rgb) / 0) 100%);
 }
 
 .featured-carousel__viewport:hover .featured-carousel__nav {

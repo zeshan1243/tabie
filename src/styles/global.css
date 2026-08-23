@@ -133,6 +133,20 @@ input, select {
     padding-inline-start: var(--content-inset-start);
     scroll-padding-inline-start: var(--content-inset-start);
   }
+
+  /* Horizontal scrollers that also carry .container. A scroller clips its overflow at
+     the padding box, so with the inset applied as padding, cards scrolled past the
+     start edge travel *through* the inset and under the floating sidebar. Trading that
+     padding for an equal margin moves the scroll box itself clear of the rail, so the
+     cards clip against it instead — same resting start position, no bleed-through. */
+  .container.scroll-track {
+    padding-inline-start: 0;
+    scroll-padding-inline-start: 0;
+    margin-inline-start: var(--content-inset-start);
+    /* .container is width:100%, so the margin above would otherwise push the track
+       past the viewport and give the whole page a horizontal scrollbar. */
+    width: auto;
+  }
 }
 
 .hide-scrollbar {

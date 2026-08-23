@@ -1,0 +1,16 @@
+{
+  "name": "Tabie",
+  "short_name": "Tabie",
+  "description": "Tabie — a premium Arabic-first streaming platform.",
+  "start_url": "/",
+  "display": "standalone",
+  "lang": "ar",
+  "dir": "rtl",
+  "background_color": "#03175e",
+  "theme_color": "#03175e",
+  "icons": [
+    { "src": "/icon-192.png", "type": "image/png", "sizes": "192x192" },
+    { "src": "/icon-512.png", "type": "image/png", "sizes": "512x512" },
+    { "src": "/icon-512.png", "type": "image/png", "sizes": "512x512", "purpose": "maskable" }
+  ]
+}

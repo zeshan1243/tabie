@@ -228,6 +228,16 @@ export const CONTINUE_WATCHING = [
   { ...CATALOG[20], progress: 47 },
 ];
 
+// Which i18n key names each content type, for the small label under a card and the
+// kicker above a details hero.
+export const TYPE_LABEL_KEY = {
+  movie: 'search.movies',
+  series: 'search.series',
+  documentary: 'search.documentaries',
+  program: 'search.programs',
+  kids: 'search.kids',
+};
+
 export function findById(id) {
   return CATALOG.find((item) => item.id === id);
 }

@@ -45,7 +45,7 @@ export default function FeaturedCarousel({ title, items, seeAllHref }) {
           <ChevronStart />
         </button>
 
-        <div className="featured-carousel__track hide-scrollbar container" ref={trackRef}>
+        <div className="featured-carousel__track hide-scrollbar container scroll-track" ref={trackRef}>
           {items.map((item) => {
             const metaParts = [
               item.year,

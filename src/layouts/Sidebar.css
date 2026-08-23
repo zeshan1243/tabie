@@ -1,3 +1,8 @@
+/* The navigation is an overlay, not a column: it is `fixed`, claims no page-layout
+   space, and has no surface of its own — no panel, no border, no edge. What makes it
+   readable is the atmosphere layer below, a wash that is densest behind the icons and
+   dissolves into the page well before the content starts. Nothing here may ever shift
+   the page: the hero and every rail stay full-width and stationary at all widths. */
 .sidebar {
   position: fixed;
   inset-inline-start: 0;
@@ -5,61 +10,83 @@
   height: 100vh;
   width: var(--sidebar-w);
   z-index: 300;
-  overflow: visible; /* lets the ambient gradient (::before) bleed past the icon column */
-  background: transparent;
-  transition: width 350ms var(--ease-premium), background 350ms var(--ease-premium);
+  overflow: visible; /* lets the atmosphere (::before) wash far past the icon column */
+  background: none;
+  border: none;
+  /* Only the hoverable region grows — invisibly, since the element paints nothing.
+     Expansion reveals labels; it never widens a panel. */
+  transition: width 400ms var(--ease-premium);
 }
 
-/* Cinematic vignette — extends well beyond the interactive column so the expanded
-   sidebar feels like it fades into the page rather than a hard rectangle. Hidden by
-   default so the collapsed rail stays clean and the hero underneath fully visible;
-   it only fades in once the sidebar is actually open (hover/focus). Pointer-events
-   stay off so even the visible bleed never blocks clicks on the page beneath it. */
+/* The atmosphere. A multi-stage ramp rather than a two-stop fade, so the density falls
+   off gradually instead of ending on a discernible edge — the far end is fully
+   transparent, and the same colour throughout, so it dissolves without a grey cast.
+   The stops are percentages, so widening on open carries the dense part of the ramp out
+   under the revealed labels on its own — meaning open/closed share one gradient and only
+   width and opacity animate. Swapping the gradient itself would snap, since gradients
+   between differing stop lists are not interpolable. Sized and faded independently of
+   the nav (see the transition list) so opening reads as light welling up from the page
+   edge, not a rectangle sliding in. */
 .sidebar::before {
   content: '';
   position: absolute;
   inset-inline-start: 0;
   top: 0;
-  width: var(--sidebar-bleed);
   height: 100%;
-  background: linear-gradient(90deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.75) 45%, rgba(0, 0, 0, 0) 100%);
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 350ms var(--ease-premium);
+  width: var(--nav-atmosphere-width);
+  background: linear-gradient(
+    90deg,
+    rgb(var(--nav-atmosphere-rgb) / 0.96) 0%,
+    rgb(var(--nav-atmosphere-rgb) / 0.94) 25%,
+    rgb(var(--nav-atmosphere-rgb) / 0.85) 45%,
+    rgb(var(--nav-atmosphere-rgb) / 0.55) 62%,
+    rgb(var(--nav-atmosphere-rgb) / 0.2) 80%,
+    rgb(var(--nav-atmosphere-rgb) / 0) 100%
+  );
+  opacity: var(--nav-atmosphere-rest);
+  pointer-events: none; /* the visible wash spills over content; it must never eat clicks */
   z-index: 0;
+  transition: opacity 350ms ease, width 400ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 [dir='rtl'] .sidebar::before {
-  background: linear-gradient(270deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.75) 45%, rgba(0, 0, 0, 0) 100%);
+  background: linear-gradient(
+    270deg,
+    rgb(var(--nav-atmosphere-rgb) / 0.96) 0%,
+    rgb(var(--nav-atmosphere-rgb) / 0.94) 25%,
+    rgb(var(--nav-atmosphere-rgb) / 0.85) 45%,
+    rgb(var(--nav-atmosphere-rgb) / 0.55) 62%,
+    rgb(var(--nav-atmosphere-rgb) / 0.2) 80%,
+    rgb(var(--nav-atmosphere-rgb) / 0) 100%
+  );
+}
+
+.sidebar:hover,
+.sidebar:focus-within {
+  width: var(--sidebar-w-expanded);
 }
 
 .sidebar:hover::before,
 .sidebar:focus-within::before {
+  width: var(--nav-atmosphere-width-open);
   opacity: 1;
 }
 
-/* While expanded, the interactive column itself gets a real (opaque-ish) backdrop so
-   labels stay legible over any hero art, layered on top of the ambient bleed above. */
-.sidebar:hover,
-.sidebar:focus-within {
-  width: var(--sidebar-w-expanded);
-  background: rgba(4, 6, 16, 0.92);
-  backdrop-filter: blur(14px);
-  box-shadow: 12px 0 48px rgba(0, 0, 0, 0.45);
-}
-
+/* Logo and icons are anchored to the collapsed column's centre line by a fixed width,
+   not by a percentage — so expanding the hoverable region reveals labels beside them
+   without nudging the marks themselves sideways. */
 .sidebar__logo {
   position: absolute;
   inset-inline-start: 0;
-  top: 20px;
+  top: 26px;
   display: flex;
   align-items: center;
-  width: 100%;
-  padding-inline-start: 20px;
+  justify-content: center;
+  width: var(--sidebar-w);
   z-index: 1;
-  /* Keeps the mark readable when collapsed over bright hero art, since the ambient
-     gradient wash is now hover-only rather than always-on. */
-  filter: drop-shadow(0 1px 6px rgba(0, 0, 0, 0.85));
+  /* The atmosphere is deliberately faint at rest, so the mark carries its own soft
+     lift to stay legible over bright hero art. */
+  filter: drop-shadow(0 1px 8px rgb(var(--nav-atmosphere-rgb) / 0.9));
 }
 
 .sidebar__nav {
@@ -70,7 +97,7 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
   z-index: 1;
 }
 
@@ -78,72 +105,91 @@
   position: relative;
   display: flex;
   align-items: center;
-  height: 46px;
-  padding-inline-start: 24px;
+  height: 48px;
+  /* The focus ring inherits this, so it lands as a pill rather than the hard rectangle
+     the rest of the design avoids. */
+  border-radius: var(--radius-pill);
+  /* Centres a 20px icon in the collapsed column and holds that position through
+     expansion, so the icon column never drifts. */
+  padding-inline-start: calc((var(--sidebar-w) - 20px) / 2);
   white-space: nowrap;
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(255, 255, 255, 0.72);
   transition: color 200ms ease;
-  /* The sidebar itself is overflow:visible (for the ::before gradient bleed below),
-     so without clipping here the invisible (opacity:0) label would still extend this
-     link's hoverable box past the collapsed 72px column — since :hover bubbles up
-     through overflowing descendants, that would trigger the sidebar's own :hover
-     expansion just from moving the mouse near it, not actually over it. */
+  /* The sidebar is overflow:visible (for the atmosphere wash), so without clipping here
+     the invisible (opacity:0) label would still extend this link's hoverable box past
+     the collapsed column — and since :hover bubbles up through overflowing descendants,
+     that would expand the nav from merely moving the mouse near it. */
   overflow: hidden;
 }
 
+/* Accent indicator — a short bar that grows out of the page edge rather than a border. */
 .sidebar__link::before {
   content: '';
   position: absolute;
-  inset-inline-start: 8px;
+  inset-inline-start: 0;
   top: 50%;
   transform: translateY(-50%);
-  width: 3px;
+  width: 2px;
   height: 0%;
   border-radius: var(--radius-pill);
   background: var(--accent-gold);
-  transition: height 200ms ease;
+  box-shadow: 0 0 10px 1px rgb(254 187 0 / 0.55);
+  transition: height 220ms var(--ease-premium);
 }
 
+/* The hover highlight is light, not a button: a translucent pill with a soft bloom,
+   present only while hovered/active. No item carries a background at rest. */
 .sidebar__link::after {
   content: '';
   position: absolute;
-  inset-inline: 4px;
-  inset-block: 2px;
-  border-radius: var(--radius-md);
-  background: rgba(255, 255, 255, 0.08);
+  inset-inline: 6px;
+  inset-block: 3px;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.13) 0%, rgba(255, 255, 255, 0.03) 100%);
+  box-shadow: 0 0 22px rgba(255, 255, 255, 0.07);
   opacity: 0;
-  transition: opacity 200ms ease;
+  transform: scale(0.96);
+  transition: opacity 220ms var(--ease-premium), transform 220ms var(--ease-premium);
   z-index: -1;
 }
 
-.sidebar__link:hover {
+[dir='rtl'] .sidebar__link::after {
+  background: linear-gradient(270deg, rgba(255, 255, 255, 0.13) 0%, rgba(255, 255, 255, 0.03) 100%);
+}
+
+.sidebar__link:hover,
+.sidebar__link:focus-visible {
   color: #fff;
 }
 
-.sidebar__link:hover::before {
-  height: 40%;
+.sidebar__link:hover::before,
+.sidebar__link:focus-visible::before {
+  height: 42%;
 }
 
-.sidebar__link:hover::after {
+.sidebar__link:hover::after,
+.sidebar__link:focus-visible::after {
   opacity: 1;
+  transform: scale(1);
 }
 
 .sidebar__link-icon {
   flex-shrink: 0;
-  transition: transform 200ms ease;
-  /* Keeps icons readable when collapsed over bright hero art, since the ambient
-     gradient wash behind the sidebar is now hover-only rather than always-on. */
-  filter: drop-shadow(0 1px 5px rgba(0, 0, 0, 0.85));
+  transition: transform 220ms var(--ease-premium), filter 220ms ease;
+  /* Same reasoning as the logo: legible over hero art while the wash is faint. */
+  filter: drop-shadow(0 1px 6px rgb(var(--nav-atmosphere-rgb) / 0.9));
 }
 
 .sidebar__link:hover .sidebar__link-icon {
-  transform: scale(1.15);
+  transform: scale(1.16);
 }
 
 .sidebar__link-label {
-  margin-inline-start: 16px;
+  margin-inline-start: 18px;
   font-size: 13.5px;
   font-weight: 600;
+  /* Insurance for the tail of the label band, where the wash is thinnest. */
+  text-shadow: 0 1px 8px rgb(var(--nav-atmosphere-rgb) / 0.85);
   opacity: 0;
   transform: translateX(-8px);
   transition: opacity 280ms var(--ease-premium), transform 280ms var(--ease-premium);
@@ -164,7 +210,11 @@
 }
 
 .sidebar__link.is-active::before {
-  height: 55%;
+  height: 56%;
+}
+
+.sidebar__link.is-active .sidebar__link-icon {
+  filter: drop-shadow(0 0 10px rgb(254 187 0 / 0.4)) drop-shadow(0 1px 6px rgb(var(--nav-atmosphere-rgb) / 0.9));
 }
 
 .sidebar__link.is-active .sidebar__link-label {

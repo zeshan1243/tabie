@@ -77,3 +77,63 @@
   padding: 8px 12px;
   font-size: 13px;
 }
+
+.theme-picker {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 12px;
+}
+
+.theme-option {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-align: start;
+  padding: 12px 14px;
+  background: var(--bg-1);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: inherit;
+  cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease-premium), background var(--dur-fast) var(--ease-premium);
+}
+
+.theme-option:hover {
+  border-color: var(--border-strong);
+  background: var(--bg-3);
+}
+
+.theme-option--selected,
+.theme-option--selected:hover {
+  border-color: var(--accent-gold);
+  background: var(--bg-3);
+}
+
+.theme-option:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+.theme-option__swatches {
+  display: flex;
+  flex-shrink: 0;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  /* The swatches are literal brand hex values, so they need their own hairline to
+     read as a chip rather than bleeding into whichever surface is behind them. */
+  border: 1px solid var(--border-strong);
+}
+
+.theme-option__swatch {
+  width: 14px;
+  height: 32px;
+}
+
+.theme-option__name {
+  font-size: 14px;
+  font-weight: 700;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

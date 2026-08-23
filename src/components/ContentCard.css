@@ -1,32 +1,50 @@
-/* Same expand-into-landscape hover mechanic as FeaturedCard: fixed height, width-only
-   transition, content overlay fades in at the bottom rather than growing a panel below. */
+/* Landscape 16/9 artwork with a small caption beneath it. Hover grows the card in both
+   directions and reveals its details *over* the artwork — no separate panel, so the image
+   stays the whole card.
+
+   The mechanics: .content-card__slot fixes the resting ratio and never changes size, while
+   .content-card__frame is absolutely positioned inside it and grows past its edges on
+   hover. Because the frame is out of flow, none of that reflows the row: neighbours hold
+   still, the row keeps its height, and nothing jumps. The media fills the frame rather
+   than holding a ratio of its own, so the two axes can grow by different amounts —
+   object-fit: cover just re-crops to whatever shape the frame becomes, never distorting.
+   The rail reserves the room the frame grows into (--track-overhang, and the block padding
+   on .rail__track), since a scroll container clips at its padding box. */
 .content-card {
-  position: relative;
   flex: 0 0 auto;
-  width: var(--card-w, 190px);
-  height: var(--card-h, 285px);
-  border-radius: var(--radius-lg);
+  width: var(--card-w, clamp(210px, 17.8vw, 300px));
+  /* Percentages, so growth stays proportional at every card width. Vertical growth is
+     split unevenly on purpose: biased downward, into the row's own reserved strip, because
+     growing this far upward would push the frame over the section header above it. */
+  --card-grow-x: 14%;
+  --card-grow-up: 10%;
+  --card-grow-down: 40%;
+}
+
+.content-card__slot {
+  position: relative;
+  aspect-ratio: 16 / 9;
+}
+
+.content-card__frame {
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
   overflow: hidden;
   background: var(--bg-2);
   box-shadow: var(--shadow-card);
-  transition: width 420ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: inset 320ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 320ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.content-card--landscape {
-  width: var(--card-w, 280px);
-  height: var(--card-h, 158px);
-}
-
-.content-card:hover,
-.content-card:focus-within {
-  width: var(--card-w-expanded, 400px);
-  box-shadow: 0 28px 64px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(254, 187, 0, 0.35), 0 0 44px rgba(254, 187, 0, 0.16);
+.content-card:hover .content-card__frame,
+.content-card:focus-within .content-card__frame {
+  inset-inline: calc(var(--card-grow-x) * -1);
+  /* Percentages on top/bottom resolve against the slot's height. */
+  top: calc(var(--card-grow-up) * -1);
+  bottom: calc(var(--card-grow-down) * -1);
+  box-shadow: 0 26px 58px rgb(var(--bg-0-rgb) / 0.72), 0 0 0 1px rgba(254, 187, 0, 0.4),
+    0 0 44px rgba(254, 187, 0, 0.14);
   z-index: 5;
-}
-
-.content-card--landscape:hover,
-.content-card--landscape:focus-within {
-  width: var(--card-w-expanded, 460px);
 }
 
 .content-card__media {
@@ -38,22 +56,39 @@
 .content-card__media img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: center 22%;
-  transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+  object-fit: cover; /* fills the ratio box without distorting the source */
+  user-select: none;
+  transition: filter 320ms ease;
 }
 
 .content-card:hover .content-card__media img,
 .content-card:focus-within .content-card__media img {
-  transform: scale(1.07);
+  filter: brightness(1.06);
 }
 
+/* Seats the artwork inside its corners — depth rather than a border. */
+.content-card__media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 26px 5px rgb(var(--bg-0-rgb) / 0.34);
+  pointer-events: none;
+}
+
+/* Light at rest so the artwork reads on its own; deepens on hover because the info sits
+   directly on the image and needs the contrast under it. */
 .content-card__overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(0deg, rgba(3, 6, 20, 0.96) 0%, rgba(3, 6, 20, 0.4) 55%, rgba(3, 6, 20, 0.05) 100%);
-  opacity: 0.7;
-  transition: opacity 420ms ease;
+  background: linear-gradient(
+    0deg,
+    rgb(var(--bg-0-rgb) / 0.96) 0%,
+    rgb(var(--bg-0-rgb) / 0.72) 34%,
+    rgb(var(--bg-0-rgb) / 0.12) 68%,
+    rgb(var(--bg-0-rgb) / 0) 100%
+  );
+  opacity: 0.42;
+  transition: opacity 320ms ease;
 }
 
 .content-card:hover .content-card__overlay,
@@ -64,55 +99,78 @@
 .content-card__progress {
   position: absolute;
   inset-inline: 10px;
-  bottom: 10px;
+  bottom: -2px;
 }
 
-.content-card__content {
+.content-card__label {
+  display: block;
+  margin-top: 9px;
+  font-size: 12px;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color var(--dur-fast);
+}
+
+.content-card:hover .content-card__label {
+  color: var(--text-secondary);
+}
+
+/* Pinned over the artwork's lower edge rather than occupying a panel of its own. Lines
+   rise on staggered delays so the block reads as settling upward. */
+.content-card__info {
   position: absolute;
   inset-inline: 0;
   bottom: 0;
-  padding: 16px;
+  padding: 14px 16px;
   pointer-events: none;
 }
 
-.content-card__content > * {
+.content-card__info > * {
   opacity: 0;
   transform: translateY(10px);
-  transition: opacity 280ms ease, transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: opacity 240ms ease, transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.content-card:hover .content-card__content > *,
-.content-card:focus-within .content-card__content > * {
+.content-card:hover .content-card__info > *,
+.content-card:focus-within .content-card__info > * {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* Only the buttons take the pointer. The title, meta and description are full-width blocks
+   covering the artwork's lower half, so making them clickable — as `.__info > *` used to —
+   meant a click there hit dead text instead of the card's link underneath. */
+.content-card:hover .content-card__actions,
+.content-card:focus-within .content-card__actions {
   pointer-events: auto;
 }
 
 .content-card__title {
-  font-size: 15px;
+  font-size: 14.5px;
   font-weight: 700;
   color: #fff;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  transition-delay: 60ms;
+  transition-delay: 50ms;
 }
 
 .content-card__meta-row {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-top: 6px;
-  flex-wrap: wrap;
-  transition-delay: 110ms;
+  margin-top: 5px;
+  transition-delay: 100ms;
 }
 
 .content-card__pill {
   display: inline-flex;
   align-items: center;
-  padding: 2px 8px;
+  padding: 1px 7px;
   border-radius: var(--radius-sm);
-  font-size: 10.5px;
+  font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.03em;
   white-space: nowrap;
@@ -130,7 +188,7 @@
 
 .content-card__metadata {
   font-size: 11.5px;
-  color: var(--text-tertiary);
+  color: var(--text-secondary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -141,21 +199,21 @@
   font-size: 12.5px;
   line-height: 1.5;
   color: var(--text-secondary);
-  transition-delay: 150ms;
+  transition-delay: 145ms;
 }
 
 .content-card__actions {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   margin-top: 12px;
-  transition-delay: 190ms;
+  transition-delay: 185ms;
 }
 
 .content-card__action {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 6px;
   border-radius: var(--radius-pill);
   color: var(--text-primary);
   border: 1.5px solid var(--border-strong);
@@ -164,8 +222,8 @@
 }
 
 .content-card__action:not(.is-primary) {
-  width: 34px;
-  height: 34px;
+  width: 31px;
+  height: 31px;
   justify-content: center;
   flex-shrink: 0;
 }
@@ -183,11 +241,11 @@
 }
 
 .content-card__action.is-primary {
-  padding: 8px 16px;
+  padding: 7px 14px;
   background: var(--accent-gold);
   border-color: var(--accent-gold);
   color: var(--text-on-gold);
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 700;
 }
 
@@ -203,15 +261,9 @@
   color: #fff;
 }
 
+/* On a small card the description is the first thing to go — it is the only line here
+   that is not needed to identify the title. */
 @media (max-width: 720px) {
-  .content-card {
-    --card-w-expanded: 280px;
-  }
-
-  .content-card--landscape {
-    --card-w-expanded: 340px;
-  }
-
   .content-card__description {
     display: none;
   }

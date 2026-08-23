@@ -68,6 +68,11 @@
 .featured-card:focus-within .featured-card__content > * {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* Only the buttons take the pointer — see the same note in ContentCard.css. */
+.featured-card:hover .featured-card__actions,
+.featured-card:focus-within .featured-card__actions {
   pointer-events: auto;
 }
 

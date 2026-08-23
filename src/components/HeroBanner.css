@@ -26,14 +26,14 @@
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(0deg, var(--bg-0) 2%, rgba(5, 8, 26, 0.15) 45%, rgba(5, 8, 26, 0.55) 100%),
-    linear-gradient(90deg, rgba(5, 8, 26, 0.85) 0%, rgba(5, 8, 26, 0.15) 55%);
+    linear-gradient(0deg, var(--bg-0) 2%, rgb(var(--bg-0-rgb) / 0.15) 45%, rgb(var(--bg-0-rgb) / 0.55) 100%),
+    linear-gradient(90deg, rgb(var(--bg-0-rgb) / 0.85) 0%, rgb(var(--bg-0-rgb) / 0.15) 55%);
 }
 
 [dir='rtl'] .hero__scrim {
   background:
-    linear-gradient(0deg, var(--bg-0) 2%, rgba(5, 8, 26, 0.15) 45%, rgba(5, 8, 26, 0.55) 100%),
-    linear-gradient(270deg, rgba(5, 8, 26, 0.85) 0%, rgba(5, 8, 26, 0.15) 55%);
+    linear-gradient(0deg, var(--bg-0) 2%, rgb(var(--bg-0-rgb) / 0.15) 45%, rgb(var(--bg-0-rgb) / 0.55) 100%),
+    linear-gradient(270deg, rgb(var(--bg-0-rgb) / 0.85) 0%, rgb(var(--bg-0-rgb) / 0.15) 55%);
 }
 
 .hero__content {

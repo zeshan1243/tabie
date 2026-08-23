@@ -11,7 +11,7 @@
 .live-hero__scrim {
   position: absolute;
   inset: 0;
-  background: linear-gradient(0deg, var(--bg-0) 5%, rgba(5, 8, 26, 0.3) 55%, rgba(5, 8, 26, 0.7) 100%);
+  background: linear-gradient(0deg, var(--bg-0) 5%, rgb(var(--bg-0-rgb) / 0.3) 55%, rgb(var(--bg-0-rgb) / 0.7) 100%);
 }
 
 .live-hero__content {

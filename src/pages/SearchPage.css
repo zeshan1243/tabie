@@ -83,13 +83,20 @@
 }
 
 .search-grid {
-  /* A wrapping flex row (not CSS Grid) so a hovered/expanded card actually pushes its
-     neighbors aside via normal reflow, matching the Home rails — grid tracks are fixed
-     and don't reflow when one item's width grows, which just made it overlap instead. */
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
+  /* Grid, not a wrapping flex row. Fixed-width cards in a flex row left whatever did not
+     divide evenly as dead space at the row's end — a visible empty gutter on wide screens.
+     1fr tracks share that remainder out across the cards instead, so every row spans the
+     full width. (The flex row originally existed so a card growing on hover could push its
+     neighbours aside; the hover mechanic no longer touches layout, so nothing needs it.) */
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  align-items: start;
   gap: 20px 14px;
+}
+
+/* Let the grid track set the width rather than the card's own clamp. */
+.search-grid .content-card {
+  width: auto;
 }
 
 .search-results-count {

@@ -1,8 +1,8 @@
-export default function SkeletonCard({ orientation = 'portrait' }) {
+export default function SkeletonCard() {
   return (
-    <div className={`content-card content-card--${orientation}`} aria-hidden="true">
-      <div className="skeleton" style={{ width: '100%', aspectRatio: orientation === 'landscape' ? '16 / 9' : '2 / 3' }} />
-      <div className="skeleton" style={{ height: 12, width: '70%', marginTop: 10, borderRadius: 4 }} />
+    <div className="content-card" aria-hidden="true">
+      <div className="skeleton" style={{ width: '100%', aspectRatio: '16 / 9', borderRadius: 12 }} />
+      <div className="skeleton" style={{ height: 11, width: '38%', marginTop: 9, borderRadius: 4 }} />
     </div>
   );
 }

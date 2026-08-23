@@ -4,13 +4,14 @@ import { CATALOG } from '../data/catalog';
 const LIST_KEY = 'tabie:myList';
 const SETTINGS_KEY = 'tabie:settings';
 
+export const THEMES = ['midnight', 'brand-navy'];
+export const DEFAULT_THEME = 'midnight';
+
 const DEFAULT_SETTINGS = {
-  autoplayNext: true,
-  autoplayPreviews: true,
+  theme: DEFAULT_THEME,
+  // Both are still read by the player; they just no longer have a settings-page control.
   defaultQuality: 'auto',
   subtitleLanguage: 'en',
-  notifyNewEpisodes: true,
-  notifyRecommendations: false,
 };
 
 function loadList() {
@@ -25,7 +26,10 @@ function loadList() {
 function loadSettings() {
   try {
     const raw = window.localStorage.getItem(SETTINGS_KEY);
-    return raw ? { ...DEFAULT_SETTINGS, ...JSON.parse(raw) } : DEFAULT_SETTINGS;
+    const merged = raw ? { ...DEFAULT_SETTINGS, ...JSON.parse(raw) } : DEFAULT_SETTINGS;
+    // A theme name written by an older/newer build must not leave the app on an
+    // undefined [data-theme] with no surface tokens at all.
+    return THEMES.includes(merged.theme) ? merged : { ...merged, theme: DEFAULT_THEME };
   } catch {
     return DEFAULT_SETTINGS;
   }
@@ -44,6 +48,12 @@ export function AppStateProvider({ children }) {
   useEffect(() => {
     window.localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
   }, [settings]);
+
+  // Surfaces are driven entirely by CSS custom properties, so switching themes is
+  // just swapping this attribute — no re-render of anything below it required.
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', settings.theme);
+  }, [settings.theme]);
 
   const isInList = useCallback((id) => myListIds.includes(id), [myListIds]);
 

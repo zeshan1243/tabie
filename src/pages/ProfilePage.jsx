@@ -1,22 +1,22 @@
 import { useState } from 'react';
 import { useI18n } from '../i18n/I18nContext';
-import { useAppState } from '../context/AppStateContext';
+import { useAppState, THEMES } from '../context/AppStateContext';
 import { CURRENT_USER } from '../data/profile';
-import Toggle from '../components/Toggle';
 import Button from '../components/Button';
 import Modal from '../components/Modal';
 import Badge from '../components/Badge';
 import './ProfilePage.css';
 
-const QUALITY_OPTIONS = ['auto', '1080p', '720p', '480p'];
-const SUBTITLE_OPTIONS = [
-  { id: 'off', en: 'Off', ar: 'إيقاف' },
-  { id: 'en', en: 'English', ar: 'الإنجليزية' },
-  { id: 'ar', en: 'Arabic', ar: 'العربية' },
-];
+// The swatch trio previews each theme's page / rail / card surfaces, so the choice
+// is legible before it is applied. Kept in sync with :root[data-theme] in theme.css.
+const THEME_SWATCHES = {
+  midnight: ['#05081a', '#0f1533', '#1b2350'],
+  'brand-navy': ['#03175e', '#0a2582', '#193bac'],
+};
+const THEME_LABEL_KEY = { midnight: 'themeMidnight', 'brand-navy': 'themeBrandNavy' };
 
 export default function ProfilePage() {
-  const { t, lang } = useI18n();
+  const { t } = useI18n();
   const { settings, updateSetting } = useAppState();
   const [logoutOpen, setLogoutOpen] = useState(false);
 
@@ -36,50 +36,29 @@ export default function ProfilePage() {
       </section>
 
       <section className="profile-section">
-        <h2>{t('profile.playback')}</h2>
-        <div className="profile-row">
-          <span>{t('profile.autoplay')}</span>
-          <Toggle checked={settings.autoplayNext} onChange={(v) => updateSetting('autoplayNext', v)} label={t('profile.autoplay')} />
-        </div>
-        <div className="profile-row">
-          <span>{t('profile.autoplayPreviews')}</span>
-          <Toggle checked={settings.autoplayPreviews} onChange={(v) => updateSetting('autoplayPreviews', v)} label={t('profile.autoplayPreviews')} />
-        </div>
-        <div className="profile-row">
-          <span>{t('profile.defaultQuality')}</span>
-          <select className="profile-select" value={settings.defaultQuality} onChange={(e) => updateSetting('defaultQuality', e.target.value)}>
-            {QUALITY_OPTIONS.map((q) => (
-              <option key={q} value={q}>
-                {q === 'auto' ? t('player.auto') : q}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="profile-row">
-          <span>{t('profile.subtitleLanguage')}</span>
-          <select className="profile-select" value={settings.subtitleLanguage} onChange={(e) => updateSetting('subtitleLanguage', e.target.value)}>
-            {SUBTITLE_OPTIONS.map((opt) => (
-              <option key={opt.id} value={opt.id}>
-                {opt[lang]}
-              </option>
-            ))}
-          </select>
-        </div>
-      </section>
-
-      <section className="profile-section">
-        <h2>{t('profile.notifications')}</h2>
-        <div className="profile-row">
-          <span>{t('profile.notifyNewEpisodes')}</span>
-          <Toggle checked={settings.notifyNewEpisodes} onChange={(v) => updateSetting('notifyNewEpisodes', v)} label={t('profile.notifyNewEpisodes')} />
-        </div>
-        <div className="profile-row">
-          <span>{t('profile.notifyRecommendations')}</span>
-          <Toggle
-            checked={settings.notifyRecommendations}
-            onChange={(v) => updateSetting('notifyRecommendations', v)}
-            label={t('profile.notifyRecommendations')}
-          />
+        <h2>{t('profile.appearance')}</h2>
+        <p className="profile-section__hint">{t('profile.themeHint')}</p>
+        <div className="theme-picker" role="radiogroup" aria-label={t('profile.theme')}>
+          {THEMES.map((id) => {
+            const selected = settings.theme === id;
+            return (
+              <button
+                key={id}
+                type="button"
+                role="radio"
+                aria-checked={selected}
+                className={`theme-option${selected ? ' theme-option--selected' : ''}`}
+                onClick={() => updateSetting('theme', id)}
+              >
+                <span className="theme-option__swatches" aria-hidden="true">
+                  {THEME_SWATCHES[id].map((c) => (
+                    <span key={c} className="theme-option__swatch" style={{ background: c }} />
+                  ))}
+                </span>
+                <span className="theme-option__name">{t(`profile.${THEME_LABEL_KEY[id]}`)}</span>
+              </button>
+            );
+          })}
         </div>
       </section>
 

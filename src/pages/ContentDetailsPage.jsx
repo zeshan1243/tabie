@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { useI18n } from '../i18n/I18nContext';
 import { useAppState } from '../context/AppStateContext';
-import { findById, getRelated, buildEpisodes } from '../data/catalog';
+import { findById, getRelated, buildEpisodes, TYPE_LABEL_KEY } from '../data/catalog';
 import { genreLabel } from '../data/genres';
 import Button from '../components/Button';
 import Badge from '../components/Badge';
@@ -11,14 +11,6 @@ import EpisodeRow from '../components/EpisodeRow';
 import FilterChips from '../components/FilterChips';
 import { PlayIcon, PlusIcon, CheckIcon } from '../components/icons';
 import './ContentDetailsPage.css';
-
-const TYPE_LABEL_KEY = {
-  movie: 'search.movies',
-  series: 'search.series',
-  documentary: 'search.documentaries',
-  program: 'search.programs',
-  kids: 'search.kids',
-};
 
 export default function ContentDetailsPage() {
   const { id } = useParams();

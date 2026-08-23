@@ -1,24 +1,36 @@
 .rail {
-  margin-block: 34px;
+  margin-block: 14px 0;
+  /* Needed so the :has() rule below can lift this row over the next one. */
+  position: relative;
+}
+
+/* A hovered card grows well past the row's own box, over whatever follows. Rows are
+   siblings, so without this the *next* row — painted later — would cover the open panel.
+   Raising only the row being hovered keeps the resting order intact, which is what lets
+   the next row's cards still take the pointer inside the reserved strip below. */
+.rail:has(.content-card:hover),
+.rail:has(.content-card:focus-within) {
+  z-index: 10;
 }
 
 .rail__header {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
 }
 
 .rail__title {
-  font-size: clamp(17px, 2vw, 21px);
-  font-weight: 700;
+  /* Deliberately understated — the artwork is what should carry the row. */
+  font-size: clamp(15px, 1.3vw, 17.5px);
+  font-weight: 600;
   letter-spacing: 0.01em;
 }
 
 .rail__see-all {
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 600;
-  color: var(--text-secondary);
+  color: var(--text-tertiary);
   transition: color var(--dur-fast);
 }
 
@@ -33,65 +45,94 @@
 .rail__track {
   display: flex;
   align-items: flex-start;
-  gap: 14px;
+  /* Tight, premium-streaming spacing. A hovered card grows over its neighbours by design,
+     so this is about the resting rhythm, not about leaving room for the hover. */
+  gap: 10px;
   overflow-x: auto;
+  /* overflow-y computes to auto alongside overflow-x, so the row clips vertically too —
+     the block padding below is what a hovered card's overhang actually grows into. */
   overflow-y: visible;
   scroll-snap-type: x proximity;
-  padding-block: 6px 14px;
+  /* A scroll container clips at its padding box, and setting overflow-x also forces
+     overflow-y off `visible` — so the only way the hover panel can hang below the cards
+     is for the box itself to extend that far. The negative margin then takes the reserved
+     strip back out of layout, so rows stay tight instead of sitting ~150px apart. */
+  padding-block: 20px 76px;
+  margin-block-end: -60px;
 }
 
 .rail__track > * {
   scroll-snap-align: start;
 }
 
+/* Subtle circular controls that sit on the artwork only while the row is being used,
+   rather than the permanent full-height gradient strips these used to be. */
 .rail__nav {
   position: absolute;
-  top: 0;
-  bottom: 14px;
-  width: 64px;
-  border: none;
+  /* Centred on the artwork rather than the row box, which now also contains the caption
+     line beneath each card. */
+  top: calc(50% - 14px);
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgb(var(--bg-0-rgb) / 0.72);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-subtle);
   display: flex;
   align-items: center;
   justify-content: center;
   color: #fff;
   z-index: 6;
   opacity: 0;
-  transition: opacity var(--dur-fast) var(--ease-premium);
+  transition: opacity 260ms var(--ease-premium), background var(--dur-fast), transform var(--dur-fast),
+    border-color var(--dur-fast);
 }
 
 .rail__nav--prev {
-  inset-inline-start: 0;
-  background: linear-gradient(90deg, var(--bg-0) 10%, transparent 100%);
+  inset-inline-start: var(--track-overhang);
 }
 
-/* Above the mobile breakpoint, the fixed sidebar overlaps the viewport's start edge
-   (see .container in global.css) — without this offset the prev button's hit area
-   sits under the sidebar, so hovering/clicking it opens the sidebar instead. */
+.rail__nav--next {
+  inset-inline-end: var(--track-overhang);
+}
+
 @media (min-width: 901px) {
+  /* Selector carries all three classes so it outranks .container.scroll-track in
+     global.css, which zeroes the inline start padding, regardless of bundle order.
+     Only ContentRail takes the overhang — the featured row shares .scroll-track but
+     keeps its own spacing. The end padding is deliberately far tighter than
+     .container's, so rows run out toward the viewport edge and wide screens show more
+     cards rather than fewer. */
+  .rail__track.container.scroll-track {
+    padding-inline-start: var(--track-overhang);
+    padding-inline-end: var(--track-overhang);
+    scroll-padding-inline-start: var(--track-overhang);
+    /* Pull the box back by exactly what the padding adds, so the cards' resting edge lands
+       on --content-inset-start — the same line the section heading above and every other
+       .container on the page use. Without this the overhang pushed the cards 44px inward
+       and the heading hung outside the first card. */
+    margin-inline-start: calc(var(--content-inset-start) - var(--track-overhang));
+  }
+
+  /* The floating nav overlays the viewport's start edge — without this offset the prev
+     button's hit area sits under the nav icons, so reaching for it expands the nav
+     instead of scrolling the row. */
   .rail__nav--prev {
     inset-inline-start: var(--content-inset-start);
   }
 }
 
-[dir='rtl'] .rail__nav--prev {
-  background: linear-gradient(270deg, var(--bg-0) 10%, transparent 100%);
-}
-
-.rail__nav--next {
-  inset-inline-end: 0;
-  background: linear-gradient(270deg, var(--bg-0) 10%, transparent 100%);
-}
-
-[dir='rtl'] .rail__nav--next {
-  background: linear-gradient(90deg, var(--bg-0) 10%, transparent 100%);
-}
-
-.rail__viewport:hover .rail__nav {
+.rail__viewport:hover .rail__nav,
+.rail__nav:focus-visible {
   opacity: 1;
 }
 
 .rail__nav:hover {
   color: var(--accent-gold);
+  border-color: var(--accent-gold);
+  background: rgb(var(--bg-0-rgb) / 0.88);
+  transform: translateY(-50%) scale(1.08);
 }
 
 @media (max-width: 720px) {

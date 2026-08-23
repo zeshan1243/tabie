@@ -11,14 +11,14 @@
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(0deg, var(--bg-0) 4%, rgba(5, 8, 26, 0.4) 40%, rgba(5, 8, 26, 0.75) 100%),
-    linear-gradient(90deg, rgba(5, 8, 26, 0.9) 5%, rgba(5, 8, 26, 0.2) 60%);
+    linear-gradient(0deg, var(--bg-0) 4%, rgb(var(--bg-0-rgb) / 0.4) 40%, rgb(var(--bg-0-rgb) / 0.75) 100%),
+    linear-gradient(90deg, rgb(var(--bg-0-rgb) / 0.9) 5%, rgb(var(--bg-0-rgb) / 0.2) 60%);
 }
 
 [dir='rtl'] .details-hero__scrim {
   background:
-    linear-gradient(0deg, var(--bg-0) 4%, rgba(5, 8, 26, 0.4) 40%, rgba(5, 8, 26, 0.75) 100%),
-    linear-gradient(270deg, rgba(5, 8, 26, 0.9) 5%, rgba(5, 8, 26, 0.2) 60%);
+    linear-gradient(0deg, var(--bg-0) 4%, rgb(var(--bg-0-rgb) / 0.4) 40%, rgb(var(--bg-0-rgb) / 0.75) 100%),
+    linear-gradient(270deg, rgb(var(--bg-0-rgb) / 0.9) 5%, rgb(var(--bg-0-rgb) / 0.2) 60%);
 }
 
 .details-hero__content {
