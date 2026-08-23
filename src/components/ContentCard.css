@@ -19,6 +19,16 @@
   --card-grow-x: 14%;
   --card-grow-up: 10%;
   --card-grow-down: 40%;
+  /* Every hover-driven transition on this card is delayed by this much. Holding it in a
+     variable rather than baking it into each rule is what makes the intent work: a pointer
+     that only passes through leaves each transition still inside its delay, so it never
+     starts and nothing visibly moves. Collapsing stays instant because the value below is
+     0ms whenever the card is not hovered — and keyboard focus never sets it at all. */
+  --hover-delay: 0ms;
+}
+
+.content-card:hover {
+  --hover-delay: var(--hover-intent);
 }
 
 .content-card__slot {
@@ -34,6 +44,7 @@
   background: var(--bg-2);
   box-shadow: var(--shadow-card);
   transition: inset 320ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 320ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--hover-delay);
 }
 
 .content-card:hover .content-card__frame,
@@ -59,6 +70,7 @@
   object-fit: cover; /* fills the ratio box without distorting the source */
   user-select: none;
   transition: filter 320ms ease;
+  transition-delay: var(--hover-delay);
 }
 
 .content-card:hover .content-card__media img,
@@ -89,6 +101,7 @@
   );
   opacity: 0.42;
   transition: opacity 320ms ease;
+  transition-delay: var(--hover-delay);
 }
 
 .content-card:hover .content-card__overlay,
@@ -111,6 +124,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   transition: color var(--dur-fast);
+  transition-delay: var(--hover-delay);
 }
 
 .content-card:hover .content-card__label {
@@ -131,6 +145,7 @@
   opacity: 0;
   transform: translateY(10px);
   transition: opacity 240ms ease, transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--hover-delay);
 }
 
 .content-card:hover .content-card__info > *,
@@ -154,7 +169,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  transition-delay: 50ms;
+  transition-delay: calc(var(--hover-delay) + 50ms);
 }
 
 .content-card__meta-row {
@@ -162,7 +177,7 @@
   align-items: center;
   gap: 8px;
   margin-top: 5px;
-  transition-delay: 100ms;
+  transition-delay: calc(var(--hover-delay) + 100ms);
 }
 
 .content-card__pill {
@@ -199,7 +214,7 @@
   font-size: 12.5px;
   line-height: 1.5;
   color: var(--text-secondary);
-  transition-delay: 145ms;
+  transition-delay: calc(var(--hover-delay) + 145ms);
 }
 
 .content-card__actions {
@@ -207,7 +222,7 @@
   align-items: center;
   gap: 8px;
   margin-top: 12px;
-  transition-delay: 185ms;
+  transition-delay: calc(var(--hover-delay) + 185ms);
 }
 
 .content-card__action {

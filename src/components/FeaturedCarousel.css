@@ -44,54 +44,60 @@
   scroll-snap-align: start;
 }
 
+/* Subtle circular controls, matching the rails below. These used to be 64px full-height
+   gradient strips at z-index 6 anchored on --content-inset-start — exactly the first card's
+   outer edge. They fade in whenever the viewport is hovered, which includes hovering a card,
+   so the strip painted *over* the expanded first card and washed its edge into the page
+   colour: the "merged into the gradient" look. A small circle cannot do that. */
 .featured-carousel__nav {
   position: absolute;
-  top: 0;
-  bottom: 24px;
-  width: 64px;
-  border: none;
+  /* Centred on the artwork; the track's block padding is asymmetric (10 / 24), so the
+     viewport's midpoint sits slightly below the card's. */
+  top: calc(50% - 7px);
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgb(var(--bg-0-rgb) / 0.72);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-subtle);
   display: flex;
   align-items: center;
   justify-content: center;
   color: #fff;
   z-index: 6;
   opacity: 0;
-  transition: opacity var(--dur-fast) var(--ease-premium);
+  transition: opacity 260ms var(--ease-premium), background var(--dur-fast), transform var(--dur-fast),
+    border-color var(--dur-fast);
 }
 
 .featured-carousel__nav--prev {
-  inset-inline-start: 0;
-  background: linear-gradient(90deg, var(--bg-0) 10%, rgb(var(--bg-0-rgb) / 0) 100%);
-}
-
-/* Above the mobile breakpoint, the fixed sidebar overlaps the viewport's start edge
-   (see .container in global.css) — without this offset the prev button's hit area
-   sits under the sidebar, so hovering/clicking it opens the sidebar instead. */
-@media (min-width: 901px) {
-  .featured-carousel__nav--prev {
-    inset-inline-start: var(--content-inset-start);
-  }
-}
-
-[dir='rtl'] .featured-carousel__nav--prev {
-  background: linear-gradient(270deg, var(--bg-0) 10%, rgb(var(--bg-0-rgb) / 0) 100%);
+  inset-inline-start: calc(var(--container-pad) + 12px);
 }
 
 .featured-carousel__nav--next {
-  inset-inline-end: 0;
-  background: linear-gradient(270deg, var(--bg-0) 10%, rgb(var(--bg-0-rgb) / 0) 100%);
+  inset-inline-end: calc(var(--container-pad) + 12px);
 }
 
-[dir='rtl'] .featured-carousel__nav--next {
-  background: linear-gradient(90deg, var(--bg-0) 10%, rgb(var(--bg-0-rgb) / 0) 100%);
-}
-
-.featured-carousel__viewport:hover .featured-carousel__nav {
-  opacity: 1;
+/* Above the mobile breakpoint the floating nav overlays the viewport's start edge (see
+   .container in global.css), so the prev button follows the content inset — otherwise its
+   hit area sits under the nav icons and reaching for it expands the nav instead. */
+@media (min-width: 901px) {
+  .featured-carousel__nav--prev {
+    inset-inline-start: calc(var(--content-inset-start) + 12px);
+  }
 }
 
 .featured-carousel__nav:hover {
   color: var(--accent-gold);
+  border-color: var(--accent-gold);
+  background: rgb(var(--bg-0-rgb) / 0.88);
+  transform: translateY(-50%) scale(1.08);
+}
+
+.featured-carousel__viewport:hover .featured-carousel__nav,
+.featured-carousel__nav:focus-visible {
+  opacity: 1;
 }
 
 @media (max-width: 720px) {

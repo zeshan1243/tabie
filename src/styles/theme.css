@@ -59,6 +59,9 @@
   --shadow-focus: 0 0 0 3px var(--bg-0), 0 0 0 5px var(--accent-gold);
 
   --ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
+  /* Hover intent: how long a pointer must settle on a card before it expands, so scrubbing
+     across a row does not fire every card on the way past. */
+  --hover-intent: 500ms;
   --dur-fast: 160ms;
   --dur-med: 280ms;
   --dur-slow: 480ms;
