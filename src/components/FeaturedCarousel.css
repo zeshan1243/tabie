@@ -39,9 +39,9 @@
   scroll-snap-type: x proximity;
   /* Momentum/inertia scrolling on iOS Safari — see the same note in ContentRail.css. */
   -webkit-overflow-scrolling: touch;
-  /* Lets the browser commit to horizontal panning immediately instead of waiting to see
-     if the gesture turns vertical first — see the same note in ContentRail.css. */
-  touch-action: pan-x;
+  /* touch-action is deliberately left at its default — see the same note in
+     ContentRail.css: restricting it to pan-x stopped a vertical swipe starting on a
+     card here from ever scrolling the page underneath it. */
   padding-block: 10px 24px;
 }
 

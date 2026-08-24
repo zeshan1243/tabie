@@ -57,11 +57,12 @@
      container can fall back to a flat, resistive scroll rather than the free-flinging,
      decelerating glide native apps (and Netflix's own web player) use. */
   -webkit-overflow-scrolling: touch;
-  /* Tells the browser up front that only horizontal panning happens here, rather than
-     letting it wait to see whether a touch turns into a vertical scroll first — that
-     detection delay is what a free-scrolling drag feels "sticky" for the first few
-     frames. Netflix's own rails set this too. */
-  touch-action: pan-x;
+  /* touch-action is deliberately left at its default (auto): restricting it to pan-x
+     made a horizontal drag commit slightly faster, but it also stopped a vertical swipe
+     that *starts* on a card from scrolling the page at all — a touch beginning inside
+     this row could then only ever pan the row, never the page underneath it. Auto lets
+     the browser read the gesture's actual direction and route it correctly either way,
+     which is the natural behaviour being asked for here. */
   /* A scroll container clips at its padding box, and setting overflow-x also forces
      overflow-y off `visible` — so the only way the hover panel can hang below the cards
      is for the box itself to extend that far. The negative margin then takes the reserved
