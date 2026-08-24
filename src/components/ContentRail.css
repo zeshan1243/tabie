@@ -57,6 +57,11 @@
      container can fall back to a flat, resistive scroll rather than the free-flinging,
      decelerating glide native apps (and Netflix's own web player) use. */
   -webkit-overflow-scrolling: touch;
+  /* Tells the browser up front that only horizontal panning happens here, rather than
+     letting it wait to see whether a touch turns into a vertical scroll first — that
+     detection delay is what a free-scrolling drag feels "sticky" for the first few
+     frames. Netflix's own rails set this too. */
+  touch-action: pan-x;
   /* A scroll container clips at its padding box, and setting overflow-x also forces
      overflow-y off `visible` — so the only way the hover panel can hang below the cards
      is for the box itself to extend that far. The negative margin then takes the reserved
@@ -66,10 +71,18 @@
 }
 
 /* Tighter rhythm on phones, closer to Netflix/Disney+'s own tight rail spacing — the
-   10px resting gap above is tuned for the wider desktop card. */
+   10px resting gap above is tuned for the wider desktop card. Snapping is dropped
+   entirely here too: it exists on desktop to give the nav-arrow buttons a clean landing
+   spot, but on touch it very slightly catches the scroll near each snap point, which
+   reads as friction against a free-flinging Netflix-style drag. */
 @media (max-width: 640px) {
   .rail__track {
     gap: 6px;
+    scroll-snap-type: none;
+  }
+
+  .rail__track > * {
+    scroll-snap-align: none;
   }
 }
 

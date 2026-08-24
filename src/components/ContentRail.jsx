@@ -1,6 +1,7 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useI18n } from '../i18n/I18nContext';
+import { rtlStartScrollLeft } from '../utils/rtlScroll';
 import ContentCard from './ContentCard';
 import SkeletonCard from './SkeletonCard';
 import { ChevronStart, ChevronEnd } from './icons';
@@ -14,6 +15,16 @@ export default function ContentRail({ title, items = [], seeAllHref, loading = f
   const teardown = useRef(null);
 
   useEffect(() => () => teardown.current?.(), []);
+
+  // Some browsers' native "rest" scrollLeft for a fresh RTL container lands on the wrong
+  // end (see utils/rtlScroll) — without this the row opens already scrolled past its last
+  // card. Re-applied whenever the item count changes, since that's what the track's
+  // scrollWidth depends on. Layout effect so it lands before the row ever paints scrolled.
+  useLayoutEffect(() => {
+    const el = trackRef.current;
+    if (!el || !isRtl) return;
+    el.scrollLeft = rtlStartScrollLeft(el);
+  }, [isRtl, items.length]);
 
   const scrollBy = (dir) => {
     const el = trackRef.current;

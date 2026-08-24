@@ -1,7 +1,8 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useLayoutEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useI18n } from '../i18n/I18nContext';
 import { genreLabel } from '../data/genres';
+import { rtlStartScrollLeft } from '../utils/rtlScroll';
 import FeaturedCard from './FeaturedCard';
 import { ChevronStart, ChevronEnd, PlayIcon, InfoIcon } from './icons';
 import './FeaturedCarousel.css';
@@ -9,6 +10,15 @@ import './FeaturedCarousel.css';
 export default function FeaturedCarousel({ title, items, seeAllHref }) {
   const { t, lang, isRtl } = useI18n();
   const trackRef = useRef(null);
+
+  // Some browsers' native "rest" scrollLeft for a fresh RTL container lands on the wrong
+  // end (see utils/rtlScroll) — without this the row opens already scrolled past its last
+  // card. Layout effect so it lands before the row ever paints scrolled.
+  useLayoutEffect(() => {
+    const el = trackRef.current;
+    if (!el || !isRtl) return;
+    el.scrollLeft = rtlStartScrollLeft(el);
+  }, [isRtl, items.length]);
 
   // Keeps the expanding card fully in view when it grows near either edge of the
   // scroll container — called once immediately and again mid-transition so the
