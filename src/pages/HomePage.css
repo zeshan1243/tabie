@@ -27,6 +27,17 @@
 
 @media (max-width: 560px) {
   .channels-row__grid {
-    grid-template-columns: repeat(2, 1fr);
+    /* 3 columns rather than 2 — with 6 channels this lands on the same 3x2 grid as the
+       reference layout instead of a taller, narrower 2x3 one. */
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+  }
+
+  /* .container's own side padding (--container-pad, 32px+ here) is tuned for page-level
+     content; the tile grid reads better closer to the screen edge, so this row gets its
+     own tighter one instead. Two classes on the selector outrank .container's single one
+     regardless of source order. */
+  .channels-row.container {
+    padding-inline: 16px;
   }
 }

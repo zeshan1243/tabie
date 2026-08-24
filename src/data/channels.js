@@ -9,6 +9,11 @@ import qatarTv2Logo from '../assets/channels/q-tv2.png';
 // Offset into the real-thumbnail pool so channel art doesn't repeat the catalog's picks.
 const CHANNEL_THUMB_OFFSET = 60;
 
+// Each logo PNG is a real broadcaster asset baked onto an opaque white canvas (not
+// transparent), so it only ever reads correctly on a light tile — which is why the
+// channel grid forced one. Rendered as a text wordmark instead (see ChannelTile), on one
+// shared dark tile color (set in ChannelTile.css) rather than per-channel color, matching
+// the reference layout where every tile shares the same background.
 const CHANNEL_DEFS = [
   { id: 'ch-qatar-tv', en: 'Qatar TV', ar: 'قطر', logo: qatarTvLogo },
   { id: 'ch-qatar-tv2', en: 'Qatar TV 2', ar: 'قطر 2', logo: qatarTv2Logo },

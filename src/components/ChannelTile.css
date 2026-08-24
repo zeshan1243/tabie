@@ -2,13 +2,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  aspect-ratio: 2.4 / 1;
-  padding: 18px 22px;
+  aspect-ratio: 1.6 / 1;
+  padding: 18px 16px;
   border-radius: var(--radius-md);
-  /* Real broadcaster logos come on their own white/colored backgrounds rather than
-     transparent art, so the tile itself stays light — matches how these logos are
-     meant to be shown rather than fighting the dark theme. */
-  background: var(--tabie-light-gray, #f2f2f2);
+  /* One shared dark tile for every channel, matching the reference layout, rather than
+     the light canvas each source logo PNG is baked onto (see data/channels.js). */
+  background: var(--bg-elevated);
   border: 1px solid var(--border-subtle);
   overflow: hidden;
   transition: transform var(--dur-fast) var(--ease-premium), box-shadow var(--dur-fast);
@@ -26,8 +25,11 @@
   }
 }
 
-.channel-tile img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+.channel-tile__name {
+  font-size: clamp(13px, 1.6vw, 16px);
+  font-weight: 700;
+  color: #fff;
+  text-align: center;
+  line-height: 1.25;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
 }
