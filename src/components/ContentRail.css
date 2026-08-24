@@ -53,12 +53,24 @@
      the block padding below is what a hovered card's overhang actually grows into. */
   overflow-y: visible;
   scroll-snap-type: x proximity;
+  /* Momentum/inertia scrolling on iOS Safari — without it a touch drag on an overflow
+     container can fall back to a flat, resistive scroll rather than the free-flinging,
+     decelerating glide native apps (and Netflix's own web player) use. */
+  -webkit-overflow-scrolling: touch;
   /* A scroll container clips at its padding box, and setting overflow-x also forces
      overflow-y off `visible` — so the only way the hover panel can hang below the cards
      is for the box itself to extend that far. The negative margin then takes the reserved
      strip back out of layout, so rows stay tight instead of sitting ~150px apart. */
   padding-block: 20px 76px;
   margin-block-end: -60px;
+}
+
+/* Tighter rhythm on phones, closer to Netflix/Disney+'s own tight rail spacing — the
+   10px resting gap above is tuned for the wider desktop card. */
+@media (max-width: 640px) {
+  .rail__track {
+    gap: 6px;
+  }
 }
 
 .rail__track > * {

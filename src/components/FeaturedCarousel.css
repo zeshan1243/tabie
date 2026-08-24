@@ -37,7 +37,16 @@
   overflow-x: auto;
   overflow-y: visible;
   scroll-snap-type: x proximity;
+  /* Momentum/inertia scrolling on iOS Safari — see the same note in ContentRail.css. */
+  -webkit-overflow-scrolling: touch;
   padding-block: 10px 24px;
+}
+
+/* Tighter rhythm on phones — see the same note in ContentRail.css. */
+@media (max-width: 640px) {
+  .featured-carousel__track {
+    gap: 8px;
+  }
 }
 
 .featured-carousel__track > * {

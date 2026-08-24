@@ -59,14 +59,11 @@
 
 .search-grid {
   /* Uniform grid with 1fr tracks: fixed-width cards in a flex row left whatever did not
-     divide evenly as dead space at the row's end, a visible empty gutter on wide screens. */
+     divide evenly as dead space at the row's end, a visible empty gutter on wide screens.
+     Desktop/tablet keeps the rails' own landscape 16/9 card unchanged — only the phone
+     layout below switches to a portrait poster wall, matching the reference for phones. */
   display: grid;
-  /* Portrait posters (below) are narrower at a given visual size than the rails' 16/9
-     cards, so the floor comes down to match rather than leaving one oversized column. */
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  /* Lets the auto-placement algorithm backfill the gaps the bento tile below leaves
-     behind, instead of leaving a hole where it was skipped in row order. */
-  grid-auto-flow: dense;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   align-items: start;
   gap: 14px;
 }
@@ -76,53 +73,55 @@
   width: auto;
 }
 
-/* Search results read as a poster wall, not a backdrop rail — portrait like the rest of
-   the industry's search grids, not the 16/9 ratio the home rails use. Flat and nearly
-   flush (small radius, no shadow) rather than the rails' floating-card treatment, so the
-   grid reads as one wall of posters instead of a stack of separate cards. */
-.search-grid .content-card__slot {
-  aspect-ratio: 2 / 3;
-}
-
-.search-grid .content-card__frame {
-  border-radius: 4px;
-  box-shadow: none;
-}
-
-/* The hover-grow amounts on ContentCard are tuned for a 16/9 slot; a 2/3 slot is already
-   ~2.7x taller for the same width, so the same percentages (which resolve against the
-   slot's own height) would overshoot into neighbouring rows by roughly that multiple.
-   Scaled back down by it here rather than switched off, so hovering still grows the card
-   the same way it does everywhere else in the app — just by a portrait-appropriate amount. */
-.search-grid .content-card {
-  --card-grow-x: 10%;
-  --card-grow-up: 4%;
-  --card-grow-down: 14%;
-}
-
-/* Three tight columns, matching the poster-wall search grids on phones — the auto-fill
-   floor above is for tablet/desktop widths where more columns fit. */
+/* ---- Phone layout: portrait poster wall + bento accent ----------------------------- */
 @media (max-width: 640px) {
   .search-grid {
     grid-template-columns: repeat(3, 1fr);
-    gap: 5px;
+    /* Lets the auto-placement algorithm backfill the gaps the bento tile below leaves
+       behind, instead of leaving a hole where it was skipped in row order. */
+    grid-auto-flow: dense;
+    gap: 3px;
   }
-}
 
-/* Bento accent: one tile every 7 gets called out at 2 columns by 2 rows, same as the
-   reference layout's single emphasized poster per screenful rather than a perfectly
-   uniform wall. align-self: stretch overrides the grid's own align-items: start just for
-   this tile, so it fills the full spanned area instead of sizing to its own aspect-ratio —
-   which is why the slot below drops aspect-ratio for height: 100% instead. */
-.search-grid > *:nth-child(7n) {
-  grid-column: span 2;
-  grid-row: span 2;
-  align-self: stretch;
-}
+  /* Search results read as a poster wall, not a backdrop rail — portrait like the rest
+     of the industry's search grids, not the 16/9 ratio the home rails use. Flat and
+     nearly flush (small radius, no shadow) rather than the rails' floating-card
+     treatment, so the grid reads as one wall of posters instead of separate cards. */
+  .search-grid .content-card__slot {
+    aspect-ratio: 2 / 3;
+  }
 
-.search-grid > *:nth-child(7n) .content-card__slot {
-  aspect-ratio: auto;
-  height: 100%;
+  .search-grid .content-card__frame {
+    border-radius: 4px;
+    box-shadow: none;
+  }
+
+  /* The hover-grow amounts on ContentCard are tuned for a 16/9 slot; a 2/3 slot is
+     already ~2.7x taller for the same width, so the same percentages (which resolve
+     against the slot's own height) would overshoot into neighbouring rows by roughly
+     that multiple. Scaled back down here rather than switched off, so hovering still
+     grows the card the same way it does everywhere else — just by a portrait amount. */
+  .search-grid .content-card {
+    --card-grow-x: 10%;
+    --card-grow-up: 4%;
+    --card-grow-down: 14%;
+  }
+
+  /* Bento accent: one tile every 7 gets called out at 2 columns by 2 rows, same as the
+     reference layout's single emphasized poster per screenful rather than a perfectly
+     uniform wall. align-self: stretch overrides the grid's own align-items: start just
+     for this tile, so it fills the full spanned area instead of sizing to its own
+     aspect-ratio — which is why the slot below drops aspect-ratio for height: 100%. */
+  .search-grid > *:nth-child(7n) {
+    grid-column: span 2;
+    grid-row: span 2;
+    align-self: stretch;
+  }
+
+  .search-grid > *:nth-child(7n) .content-card__slot {
+    aspect-ratio: auto;
+    height: 100%;
+  }
 }
 
 .search-results-count {
