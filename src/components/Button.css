@@ -31,6 +31,16 @@
   font-size: 17px;
 }
 
+/* --lg is used for hero/details CTAs sized for a wide screen — at phone widths it ate
+   half the viewport per button. Step it down toward --md rather than a fixed value, so
+   it still reads as the "bigger" tier next to any --md/--sm button beside it. */
+@media (max-width: 640px) {
+  .btn--lg {
+    padding: 12px 22px;
+    font-size: 14px;
+  }
+}
+
 .btn--icon-only {
   padding: 10px;
   border-radius: 50%;

@@ -1,9 +1,12 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useI18n } from '../i18n/I18nContext';
 import { useAppState } from '../context/AppStateContext';
 import { genreLabel } from '../data/genres';
 import { TYPE_LABEL_KEY } from '../data/catalog';
+import { useLongPress } from '../hooks/useLongPress';
 import ProgressBar from './ProgressBar';
+import BottomSheet from './BottomSheet';
 import { PlayIcon, PlusIcon, CheckIcon, TrashIcon, InfoIcon } from './icons';
 import './ContentCard.css';
 
@@ -11,8 +14,14 @@ import './ContentCard.css';
 export default function ContentCard({ item, progress, removable = false, captionInside = false }) {
   const { t, lang } = useI18n();
   const { isInList, toggleList, removeFromList } = useAppState();
+  const [sheetOpen, setSheetOpen] = useState(false);
   const saved = isInList(item.id);
   const detailsHref = `/title/${item.id}`;
+
+  // Touch has no hover, so the desktop reveal-on-hover panel is unreachable there — a
+  // long press opens the same details in a bottom sheet instead, Prime Video-style.
+  const longPress = useLongPress(() => setSheetOpen(true));
+  const closeSheet = () => setSheetOpen(false);
 
   // One line rather than two: the info now sits over the artwork, so every line it does
   // not need is artwork it does not cover. Rating stays a pill beside it.
@@ -24,8 +33,58 @@ export default function ContentCard({ item, progress, removable = false, caption
     .filter(Boolean)
     .join(' • ');
 
+  const metaRow = (
+    <div className="content-card__meta-row">
+      {item.rating && <span className="content-card__pill content-card__pill--outline">{item.rating}</span>}
+      <span className="content-card__metadata">{metaLine}</span>
+      {item.tags?.includes('newRelease') && <span className="content-card__pill content-card__pill--gold">{t('common.new')}</span>}
+    </div>
+  );
+
+  const actions = (
+    <div className="content-card__actions">
+      <Link to={`/watch/${item.id}`} className="content-card__action is-primary" aria-label={t('common.play')} onClick={closeSheet}>
+        <PlayIcon width={13} height={13} />
+        <span>{t('common.watchNow')}</span>
+      </Link>
+      {removable ? (
+        <button
+          type="button"
+          className="content-card__action content-card__action--danger"
+          onClick={() => {
+            removeFromList(item.id);
+            closeSheet();
+          }}
+          aria-label={t('common.removeFromList')}
+        >
+          <TrashIcon width={14} height={14} />
+        </button>
+      ) : (
+        <button
+          type="button"
+          className={`content-card__action ${saved ? 'is-active' : ''}`}
+          onClick={() => toggleList(item.id)}
+          aria-pressed={saved}
+          aria-label={saved ? t('common.removeFromList') : t('common.addToList')}
+        >
+          {saved ? <CheckIcon width={14} height={14} /> : <PlusIcon width={14} height={14} />}
+        </button>
+      )}
+      <Link to={detailsHref} className="content-card__action" aria-label={t('common.moreInfo')} onClick={closeSheet}>
+        <InfoIcon width={14} height={14} />
+      </Link>
+    </div>
+  );
+
   return (
-    <div className={`content-card${captionInside ? ' content-card--caption-inside' : ''}`}>
+    <div
+      className={`content-card${captionInside ? ' content-card--caption-inside' : ''}`}
+      onPointerDown={longPress.onPointerDown}
+      onPointerMove={longPress.onPointerMove}
+      onPointerUp={longPress.onPointerUp}
+      onPointerCancel={longPress.onPointerCancel}
+      onClickCapture={longPress.onClickCapture}
+    >
       {/* The slot holds the artwork's ratio and never changes size. __frame grows out of it
           on hover — wider and taller — so a hovered card reflows nothing around it. */}
       <div className="content-card__slot">
@@ -46,37 +105,9 @@ export default function ContentCard({ item, progress, removable = false, caption
 
           <div className="content-card__info">
             <p className="content-card__title">{item.title[lang]}</p>
-            <div className="content-card__meta-row">
-              {item.rating && <span className="content-card__pill content-card__pill--outline">{item.rating}</span>}
-              <span className="content-card__metadata">{metaLine}</span>
-              {item.tags?.includes('newRelease') && <span className="content-card__pill content-card__pill--gold">{t('common.new')}</span>}
-            </div>
+            {metaRow}
             <p className="content-card__description line-clamp-2">{item.synopsis[lang]}</p>
-
-            <div className="content-card__actions">
-              <Link to={`/watch/${item.id}`} className="content-card__action is-primary" aria-label={t('common.play')}>
-                <PlayIcon width={13} height={13} />
-                <span>{t('common.watchNow')}</span>
-              </Link>
-              {removable ? (
-                <button type="button" className="content-card__action content-card__action--danger" onClick={() => removeFromList(item.id)} aria-label={t('common.removeFromList')}>
-                  <TrashIcon width={14} height={14} />
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  className={`content-card__action ${saved ? 'is-active' : ''}`}
-                  onClick={() => toggleList(item.id)}
-                  aria-pressed={saved}
-                  aria-label={saved ? t('common.removeFromList') : t('common.addToList')}
-                >
-                  {saved ? <CheckIcon width={14} height={14} /> : <PlusIcon width={14} height={14} />}
-                </button>
-              )}
-              <Link to={detailsHref} className="content-card__action" aria-label={t('common.moreInfo')}>
-                <InfoIcon width={14} height={14} />
-              </Link>
-            </div>
+            {actions}
           </div>
         </div>
       </div>
@@ -90,6 +121,18 @@ export default function ContentCard({ item, progress, removable = false, caption
           {t(TYPE_LABEL_KEY[item.type] || 'search.movies')}
         </Link>
       )}
+
+      <BottomSheet open={sheetOpen} onClose={closeSheet}>
+        <div className="card-sheet">
+          <div className="card-sheet__media">
+            <img src={item.backdrop} alt="" />
+          </div>
+          <p className="card-sheet__title">{item.title[lang]}</p>
+          {metaRow}
+          <p className="card-sheet__description">{item.synopsis[lang]}</p>
+          {actions}
+        </div>
+      </BottomSheet>
     </div>
   );
 }

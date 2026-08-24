@@ -27,8 +27,18 @@
   --hover-delay: 0ms;
 }
 
-.content-card:hover {
-  --hover-delay: var(--hover-intent);
+/* Every :hover trigger on this card is gated to devices that can actually hover — on a
+   touchscreen (hover: none) a tap otherwise leaves :hover "stuck" until the next tap
+   lands elsewhere, so the card would grow and stay grown after the user has moved on.
+   :focus-within needs the same care: a tap on a touchscreen can genuinely move focus onto
+   the card's own link (several mobile browsers do this), so it is gated to "not a coarse
+   pointer" everywhere below rather than left open — real keyboard/TV-remote focus reports
+   pointer:none or pointer:fine, never coarse, so those keep working. Touch's own way in is
+   the long-press bottom sheet (see useLongPress + BottomSheet), not this reveal. */
+@media (hover: hover) and (pointer: fine) {
+  .content-card:hover {
+    --hover-delay: var(--hover-intent);
+  }
 }
 
 .content-card__slot {
@@ -47,15 +57,27 @@
   transition-delay: var(--hover-delay);
 }
 
-.content-card:hover .content-card__frame,
-.content-card:focus-within .content-card__frame {
-  inset-inline: calc(var(--card-grow-x) * -1);
-  /* Percentages on top/bottom resolve against the slot's height. */
-  top: calc(var(--card-grow-up) * -1);
-  bottom: calc(var(--card-grow-down) * -1);
-  box-shadow: 0 26px 58px rgb(var(--bg-0-rgb) / 0.72), 0 0 0 1px rgba(254, 187, 0, 0.4),
-    0 0 44px rgba(254, 187, 0, 0.14);
-  z-index: 5;
+@media not (pointer: coarse) {
+  .content-card:focus-within .content-card__frame {
+    inset-inline: calc(var(--card-grow-x) * -1);
+    /* Percentages on top/bottom resolve against the slot's height. */
+    top: calc(var(--card-grow-up) * -1);
+    bottom: calc(var(--card-grow-down) * -1);
+    box-shadow: 0 26px 58px rgb(var(--bg-0-rgb) / 0.72), 0 0 0 1px rgba(254, 187, 0, 0.4),
+      0 0 44px rgba(254, 187, 0, 0.14);
+    z-index: 5;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .content-card:hover .content-card__frame {
+    inset-inline: calc(var(--card-grow-x) * -1);
+    top: calc(var(--card-grow-up) * -1);
+    bottom: calc(var(--card-grow-down) * -1);
+    box-shadow: 0 26px 58px rgb(var(--bg-0-rgb) / 0.72), 0 0 0 1px rgba(254, 187, 0, 0.4),
+      0 0 44px rgba(254, 187, 0, 0.14);
+    z-index: 5;
+  }
 }
 
 .content-card__media {
@@ -73,9 +95,16 @@
   transition-delay: var(--hover-delay);
 }
 
-.content-card:hover .content-card__media img,
-.content-card:focus-within .content-card__media img {
-  filter: brightness(1.06);
+@media not (pointer: coarse) {
+  .content-card:focus-within .content-card__media img {
+    filter: brightness(1.06);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .content-card:hover .content-card__media img {
+    filter: brightness(1.06);
+  }
 }
 
 /* Seats the artwork inside its corners — depth rather than a border. */
@@ -104,9 +133,16 @@
   transition-delay: var(--hover-delay);
 }
 
-.content-card:hover .content-card__overlay,
-.content-card:focus-within .content-card__overlay {
-  opacity: 1;
+@media not (pointer: coarse) {
+  .content-card:focus-within .content-card__overlay {
+    opacity: 1;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .content-card:hover .content-card__overlay {
+    opacity: 1;
+  }
 }
 
 .content-card__progress {
@@ -127,8 +163,10 @@
   transition-delay: var(--hover-delay);
 }
 
-.content-card:hover .content-card__label {
-  color: var(--text-secondary);
+@media (hover: hover) and (pointer: fine) {
+  .content-card:hover .content-card__label {
+    color: var(--text-secondary);
+  }
 }
 
 /* Pinned over the artwork's lower edge rather than occupying a panel of its own. Lines
@@ -148,18 +186,33 @@
   transition-delay: var(--hover-delay);
 }
 
-.content-card:hover .content-card__info > *,
-.content-card:focus-within .content-card__info > * {
-  opacity: 1;
-  transform: translateY(0);
+@media not (pointer: coarse) {
+  .content-card:focus-within .content-card__info > * {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .content-card:hover .content-card__info > * {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Only the buttons take the pointer. The title, meta and description are full-width blocks
    covering the artwork's lower half, so making them clickable — as `.__info > *` used to —
    meant a click there hit dead text instead of the card's link underneath. */
-.content-card:hover .content-card__actions,
-.content-card:focus-within .content-card__actions {
-  pointer-events: auto;
+@media not (pointer: coarse) {
+  .content-card:focus-within .content-card__actions {
+    pointer-events: auto;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .content-card:hover .content-card__actions {
+    pointer-events: auto;
+  }
 }
 
 .content-card__title {
@@ -243,10 +296,12 @@
   flex-shrink: 0;
 }
 
-.content-card__action:hover {
-  transform: scale(1.06);
-  border-color: var(--accent-gold);
-  color: var(--accent-gold);
+@media (hover: hover) and (pointer: fine) {
+  .content-card__action:hover {
+    transform: scale(1.06);
+    border-color: var(--accent-gold);
+    color: var(--accent-gold);
+  }
 }
 
 .content-card__action.is-active {
@@ -264,16 +319,20 @@
   font-weight: 700;
 }
 
-.content-card__action.is-primary:hover {
-  background: var(--accent-gold-hover);
-  border-color: var(--accent-gold-hover);
-  color: var(--text-on-gold);
+@media (hover: hover) and (pointer: fine) {
+  .content-card__action.is-primary:hover {
+    background: var(--accent-gold-hover);
+    border-color: var(--accent-gold-hover);
+    color: var(--text-on-gold);
+  }
 }
 
-.content-card__action--danger:hover {
-  background: var(--accent-danger);
-  border-color: var(--accent-danger);
-  color: #fff;
+@media (hover: hover) and (pointer: fine) {
+  .content-card__action--danger:hover {
+    background: var(--accent-danger);
+    border-color: var(--accent-danger);
+    color: #fff;
+  }
 }
 
 /* On a small card the description is the first thing to go — it is the only line here
@@ -307,7 +366,91 @@
   transition: opacity 200ms ease;
 }
 
-.content-card--caption-inside:hover .content-card__caption,
-.content-card--caption-inside:focus-within .content-card__caption {
-  opacity: 0;
+@media not (pointer: coarse) {
+  .content-card--caption-inside:focus-within .content-card__caption {
+    opacity: 0;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .content-card--caption-inside:hover .content-card__caption {
+    opacity: 0;
+  }
+}
+
+/* Below this width, hover/focus reveal is off outright — no hover/pointer capability
+   check, just the plain "mobile screen" cutoff, so a narrow desktop window or DevTools'
+   responsive mode behaves the same as a phone. Touch's own way in is the long-press
+   bottom sheet below. */
+@media (max-width: 900px) {
+  .content-card:hover .content-card__frame,
+  .content-card:focus-within .content-card__frame {
+    inset: 0;
+    box-shadow: var(--shadow-card);
+    z-index: auto;
+  }
+
+  .content-card:hover .content-card__media img,
+  .content-card:focus-within .content-card__media img {
+    filter: none;
+  }
+
+  .content-card:hover .content-card__overlay,
+  .content-card:focus-within .content-card__overlay {
+    opacity: 0.42;
+  }
+
+  .content-card:hover .content-card__info > *,
+  .content-card:focus-within .content-card__info > * {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  .content-card:hover .content-card__actions,
+  .content-card:focus-within .content-card__actions {
+    pointer-events: none;
+  }
+
+  .content-card__action:hover {
+    transform: none;
+    border-color: var(--border-strong);
+    color: var(--text-primary);
+  }
+
+  .content-card--caption-inside:hover .content-card__caption,
+  .content-card--caption-inside:focus-within .content-card__caption {
+    opacity: 1;
+  }
+}
+
+/* ---- Long-press bottom sheet (touch) -------------------------------------------------
+   Touch has no hover, so the reveal-on-hover panel above is unreachable there — a long
+   press opens this instead (see useLongPress), reusing the same pills/actions markup
+   and classes so the two stay in sync automatically. */
+.card-sheet__media {
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+
+.card-sheet__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card-sheet__title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.card-sheet__description {
+  margin-top: 10px;
+  margin-bottom: 18px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-secondary);
 }

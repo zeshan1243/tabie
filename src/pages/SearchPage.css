@@ -57,98 +57,72 @@
   color: var(--text-primary);
 }
 
-/* One scrolling line of small pills rather than a wrapping grid of tiles. The arrows sit
-   outside the track, so the chips scroll under nothing and the row never grows taller. */
-.search-genre-rail {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.search-genre-track {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  /* The whole point: never wrap to a second line. */
-  flex-wrap: nowrap;
-  scroll-snap-type: x proximity;
-  padding-block: 2px;
-}
-
-.search-genre-chip {
-  flex: 0 0 auto;
-  scroll-snap-align: start;
-  padding: 8px 15px;
-  border-radius: var(--radius-pill);
-  border: none;
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--text-primary);
-  font-size: 13px;
-  font-weight: 600;
-  white-space: nowrap;
-  transition: background var(--dur-fast) var(--ease-premium), color var(--dur-fast) var(--ease-premium);
-}
-
-.search-genre-chip:hover {
-  background: rgba(255, 255, 255, 0.16);
-}
-
-/* Selected reads as inverted rather than merely tinted, so it is unmistakable at this size. */
-.search-genre-chip.is-active {
-  background: var(--accent-gold);
-  color: var(--text-on-gold);
-}
-
-.search-genre-nav {
-  flex: 0 0 auto;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid var(--border-subtle);
-  background: rgb(var(--bg-0-rgb) / 0.6);
-  color: var(--text-secondary);
-  transition: color var(--dur-fast), border-color var(--dur-fast), background var(--dur-fast);
-}
-
-.search-genre-nav:hover {
-  color: var(--accent-gold);
-  border-color: var(--accent-gold);
-  background: rgb(var(--bg-0-rgb) / 0.85);
-}
-
-.search-genre-nav svg {
-  width: 15px;
-  height: 15px;
-}
-
-/* Touch scrolls the row directly, so the arrows are dead weight there. */
-@media (max-width: 720px) {
-  .search-genre-nav {
-    display: none;
-  }
-}
-
 .search-grid {
   /* Uniform grid with 1fr tracks: fixed-width cards in a flex row left whatever did not
      divide evenly as dead space at the row's end, a visible empty gutter on wide screens. */
   display: grid;
-  /* Floor raised from 210px so the tracks land near the home rails' card width
-     (clamp(210px, 17.8vw, 300px)) rather than well under it. The hover growth is a
-     percentage, so a smaller resting card was the whole reason expanding felt weaker
-     here than on the home page. */
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  /* Portrait posters (below) are narrower at a given visual size than the rails' 16/9
+     cards, so the floor comes down to match rather than leaving one oversized column. */
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  /* Lets the auto-placement algorithm backfill the gaps the bento tile below leaves
+     behind, instead of leaving a hole where it was skipped in row order. */
+  grid-auto-flow: dense;
   align-items: start;
-  /* Even both ways — the cards carry their title inside now, so there is no caption line
-     under them needing extra room. */
   gap: 14px;
 }
 
 /* Let the grid track set the width rather than the card's own clamp. */
 .search-grid .content-card {
   width: auto;
+}
+
+/* Search results read as a poster wall, not a backdrop rail — portrait like the rest of
+   the industry's search grids, not the 16/9 ratio the home rails use. Flat and nearly
+   flush (small radius, no shadow) rather than the rails' floating-card treatment, so the
+   grid reads as one wall of posters instead of a stack of separate cards. */
+.search-grid .content-card__slot {
+  aspect-ratio: 2 / 3;
+}
+
+.search-grid .content-card__frame {
+  border-radius: 4px;
+  box-shadow: none;
+}
+
+/* The hover-grow amounts on ContentCard are tuned for a 16/9 slot; a 2/3 slot is already
+   ~2.7x taller for the same width, so the same percentages (which resolve against the
+   slot's own height) would overshoot into neighbouring rows by roughly that multiple.
+   Scaled back down by it here rather than switched off, so hovering still grows the card
+   the same way it does everywhere else in the app — just by a portrait-appropriate amount. */
+.search-grid .content-card {
+  --card-grow-x: 10%;
+  --card-grow-up: 4%;
+  --card-grow-down: 14%;
+}
+
+/* Three tight columns, matching the poster-wall search grids on phones — the auto-fill
+   floor above is for tablet/desktop widths where more columns fit. */
+@media (max-width: 640px) {
+  .search-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+  }
+}
+
+/* Bento accent: one tile every 7 gets called out at 2 columns by 2 rows, same as the
+   reference layout's single emphasized poster per screenful rather than a perfectly
+   uniform wall. align-self: stretch overrides the grid's own align-items: start just for
+   this tile, so it fills the full spanned area instead of sizing to its own aspect-ratio —
+   which is why the slot below drops aspect-ratio for height: 100% instead. */
+.search-grid > *:nth-child(7n) {
+  grid-column: span 2;
+  grid-row: span 2;
+  align-self: stretch;
+}
+
+.search-grid > *:nth-child(7n) .content-card__slot {
+  aspect-ratio: auto;
+  height: 100%;
 }
 
 .search-results-count {

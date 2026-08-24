@@ -12,9 +12,11 @@
   transition: background var(--dur-fast), border-color var(--dur-fast), transform var(--dur-fast);
 }
 
-.channel-card:hover {
-  background: var(--bg-3);
-  transform: translateY(-2px);
+@media (hover: hover) and (pointer: fine) {
+  .channel-card:hover {
+    background: var(--bg-3);
+    transform: translateY(-2px);
+  }
 }
 
 .channel-card.is-active {

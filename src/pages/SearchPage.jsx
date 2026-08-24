@@ -1,21 +1,19 @@
-import { useMemo, useRef, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useI18n } from '../i18n/I18nContext';
 import { useDebouncedValue } from '../hooks/useDebouncedValue';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { CATALOG, TRENDING } from '../data/catalog';
-import { GENRES, genreLabel } from '../data/genres';
+import { genreLabel } from '../data/genres';
 import SearchBar from '../components/SearchBar';
 import FilterChips from '../components/FilterChips';
 import ContentCard from '../components/ContentCard';
 import EmptyState from '../components/EmptyState';
-import { SearchIcon, ClockIcon, ChevronStart, ChevronEnd } from '../components/icons';
+import { SearchIcon, ClockIcon } from '../components/icons';
 import './SearchPage.css';
 
 export default function SearchPage() {
-  const { t, lang, isRtl } = useI18n();
-  const genreRailRef = useRef(null);
-  const [genreOverflow, setGenreOverflow] = useState(false);
+  const { t, lang } = useI18n();
   const [params] = useSearchParams();
   const [query, setQuery] = useState('');
   const [genreFilter, setGenreFilter] = useState(params.get('genre') || null);
@@ -44,11 +42,6 @@ export default function SearchPage() {
   const handleQueryChange = (value) => {
     setQuery(value);
     if (value) setGenreFilter(null);
-  };
-
-  const handleGenreClick = (genreId) => {
-    setGenreFilter(genreId);
-    setQuery('');
   };
 
   const typeOptions = [
@@ -81,29 +74,6 @@ export default function SearchPage() {
   const activeTypeOption = typeOptions.find((opt) => opt.id === typeFilter);
   const activeLabel = genreFilter ? genreLabel(genreFilter, lang) : debounced.trim() || activeTypeOption?.label || '';
 
-  // The chips only need arrows when they actually run past the edge — at wide viewports the
-  // whole set fits, and YouTube's bar hides them in that case too. Re-checked on resize, and
-  // keyed on isActive because the browse view (and so the track) unmounts while searching.
-  useEffect(() => {
-    const el = genreRailRef.current;
-    if (!el) {
-      setGenreOverflow(false);
-      return undefined;
-    }
-    const check = () => setGenreOverflow(el.scrollWidth - el.clientWidth > 1);
-    check();
-    const observer = new ResizeObserver(check);
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [isActive]);
-
-  const scrollGenres = (dir) => {
-    const el = genreRailRef.current;
-    if (!el) return;
-    // RTL scrollLeft runs negative, so the sign has to flip with the writing direction.
-    el.scrollBy({ left: el.clientWidth * 0.7 * dir * (isRtl ? -1 : 1), behavior: 'smooth' });
-  };
-
   return (
     <div className="search-page container">
       <SearchBar value={query} onChange={handleQueryChange} placeholder={t('search.placeholder')} />
@@ -130,44 +100,6 @@ export default function SearchPage() {
               </div>
             </section>
           )}
-
-          <section className="search-section">
-            <h2>{t('search.categories')}</h2>
-            <div className="search-genre-rail">
-              {genreOverflow && (
-                <button
-                  type="button"
-                  className="search-genre-nav search-genre-nav--prev"
-                  onClick={() => scrollGenres(-1)}
-                  aria-label={t('common.back')}
-                >
-                  <ChevronStart />
-                </button>
-              )}
-              <div className="search-genre-track hide-scrollbar" ref={genreRailRef}>
-                {GENRES.map((g) => (
-                  <button
-                    key={g.id}
-                    type="button"
-                    className={`search-genre-chip${genreFilter === g.id ? ' is-active' : ''}`}
-                    onClick={() => handleGenreClick(g.id)}
-                  >
-                    {genreLabel(g.id, lang)}
-                  </button>
-                ))}
-              </div>
-              {genreOverflow && (
-                <button
-                  type="button"
-                  className="search-genre-nav search-genre-nav--next"
-                  onClick={() => scrollGenres(1)}
-                  aria-label={t('common.seeAll')}
-                >
-                  <ChevronEnd />
-                </button>
-              )}
-            </div>
-          </section>
 
           <section className="search-section">
             <h2>{t('search.popular')}</h2>

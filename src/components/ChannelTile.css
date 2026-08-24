@@ -14,10 +14,16 @@
   transition: transform var(--dur-fast) var(--ease-premium), box-shadow var(--dur-fast);
 }
 
-.channel-tile:hover,
 .channel-tile:focus-visible {
   transform: translateY(-3px) scale(1.03);
   box-shadow: var(--shadow-card-hover);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .channel-tile:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: var(--shadow-card-hover);
+  }
 }
 
 .channel-tile img {

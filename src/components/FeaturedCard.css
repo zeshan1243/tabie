@@ -14,15 +14,25 @@
   will-change: width;
 }
 
-.featured-card:hover {
-  --hover-delay: var(--hover-intent);
+/* Every :hover trigger here is gated to devices that can actually hover, and every
+   :focus-within trigger to devices without a coarse pointer — see the same note in
+   ContentCard.css. A tap on a touchscreen can genuinely focus the card's own link, so
+   :focus-within needs the same gating as :hover or it reveals on tap there too. */
+@media not (pointer: coarse) {
+  .featured-card:focus-within {
+    width: var(--fc-w-expanded, 440px);
+    box-shadow: 0 28px 64px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(254, 187, 0, 0.35), 0 0 44px rgba(254, 187, 0, 0.16);
+    z-index: 5;
+  }
 }
 
-.featured-card:hover,
-.featured-card:focus-within {
-  width: var(--fc-w-expanded, 440px);
-  box-shadow: 0 28px 64px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(254, 187, 0, 0.35), 0 0 44px rgba(254, 187, 0, 0.16);
-  z-index: 5;
+@media (hover: hover) and (pointer: fine) {
+  .featured-card:hover {
+    --hover-delay: var(--hover-intent);
+    width: var(--fc-w-expanded, 440px);
+    box-shadow: 0 28px 64px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(254, 187, 0, 0.35), 0 0 44px rgba(254, 187, 0, 0.16);
+    z-index: 5;
+  }
 }
 
 .featured-card__media {
@@ -40,9 +50,16 @@
   transition-delay: var(--hover-delay);
 }
 
-.featured-card:hover .featured-card__media img,
-.featured-card:focus-within .featured-card__media img {
-  transform: scale(1.07);
+@media not (pointer: coarse) {
+  .featured-card:focus-within .featured-card__media img {
+    transform: scale(1.07);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .featured-card:hover .featured-card__media img {
+    transform: scale(1.07);
+  }
 }
 
 .featured-card__overlay {
@@ -54,9 +71,16 @@
   transition-delay: var(--hover-delay);
 }
 
-.featured-card:hover .featured-card__overlay,
-.featured-card:focus-within .featured-card__overlay {
-  opacity: 1;
+@media not (pointer: coarse) {
+  .featured-card:focus-within .featured-card__overlay {
+    opacity: 1;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .featured-card:hover .featured-card__overlay {
+    opacity: 1;
+  }
 }
 
 .featured-card__content {
@@ -74,16 +98,27 @@
   transition-delay: var(--hover-delay);
 }
 
-.featured-card:hover .featured-card__content > *,
-.featured-card:focus-within .featured-card__content > * {
-  opacity: 1;
-  transform: translateY(0);
+@media not (pointer: coarse) {
+  .featured-card:focus-within .featured-card__content > * {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Only the buttons take the pointer — see the same note in ContentCard.css. */
+  .featured-card:focus-within .featured-card__actions {
+    pointer-events: auto;
+  }
 }
 
-/* Only the buttons take the pointer — see the same note in ContentCard.css. */
-.featured-card:hover .featured-card__actions,
-.featured-card:focus-within .featured-card__actions {
-  pointer-events: auto;
+@media (hover: hover) and (pointer: fine) {
+  .featured-card:hover .featured-card__content > * {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .featured-card:hover .featured-card__actions {
+    pointer-events: auto;
+  }
 }
 
 .featured-card__title,
@@ -187,10 +222,12 @@
   border: 1.5px solid var(--border-strong);
 }
 
-.featured-card__action:hover {
-  transform: scale(1.06);
-  border-color: var(--accent-gold);
-  color: var(--accent-gold);
+@media (hover: hover) and (pointer: fine) {
+  .featured-card__action:hover {
+    transform: scale(1.06);
+    border-color: var(--accent-gold);
+    color: var(--accent-gold);
+  }
 }
 
 .featured-card__action.is-primary {
@@ -201,9 +238,54 @@
   font-weight: 700;
 }
 
-.featured-card__action.is-primary:hover {
-  background: var(--accent-gold-hover);
-  color: var(--text-on-gold);
+@media (hover: hover) and (pointer: fine) {
+  .featured-card__action.is-primary:hover {
+    background: var(--accent-gold-hover);
+    color: var(--text-on-gold);
+  }
+}
+
+/* Below this width, hover/focus reveal is off outright — see the same note in
+   ContentCard.css. No hover/pointer capability check, just the plain screen-size cutoff. */
+@media (max-width: 900px) {
+  .featured-card:hover,
+  .featured-card:focus-within {
+    width: var(--fc-w, 210px);
+    box-shadow: var(--shadow-card);
+    z-index: auto;
+  }
+
+  .featured-card:hover .featured-card__media img,
+  .featured-card:focus-within .featured-card__media img {
+    transform: none;
+  }
+
+  .featured-card:hover .featured-card__overlay,
+  .featured-card:focus-within .featured-card__overlay {
+    opacity: 0.7;
+  }
+
+  .featured-card:hover .featured-card__content > *,
+  .featured-card:focus-within .featured-card__content > * {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  .featured-card:hover .featured-card__actions,
+  .featured-card:focus-within .featured-card__actions {
+    pointer-events: none;
+  }
+
+  .featured-card__action:hover {
+    transform: none;
+    border-color: var(--border-strong);
+    color: var(--text-primary);
+  }
+
+  .featured-card__action.is-primary:hover {
+    background: var(--accent-gold);
+    color: var(--text-on-gold);
+  }
 }
 
 @media (max-width: 720px) {
