@@ -11,50 +11,9 @@
   gap: 14px;
 }
 
-.search-section__head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
 .search-section h2 {
   font-size: 17px;
   font-weight: 700;
-}
-
-.search-clear {
-  background: none;
-  border: none;
-  color: var(--text-tertiary);
-  font-size: 13px;
-  font-weight: 600;
-}
-
-.search-clear:hover {
-  color: var(--accent-gold);
-}
-
-.search-recent-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.search-recent-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 14px;
-  border-radius: var(--radius-pill);
-  background: var(--bg-2);
-  border: 1px solid var(--border-subtle);
-  color: var(--text-secondary);
-  font-size: 13px;
-}
-
-.search-recent-chip:hover {
-  border-color: var(--border-strong);
-  color: var(--text-primary);
 }
 
 .search-grid {

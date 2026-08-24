@@ -2,14 +2,12 @@ import { useMemo, useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useI18n } from '../i18n/I18nContext';
 import { useDebouncedValue } from '../hooks/useDebouncedValue';
-import { useLocalStorage } from '../hooks/useLocalStorage';
 import { CATALOG, TRENDING } from '../data/catalog';
 import { genreLabel } from '../data/genres';
 import SearchBar from '../components/SearchBar';
-import FilterChips from '../components/FilterChips';
 import ContentCard from '../components/ContentCard';
 import EmptyState from '../components/EmptyState';
-import { SearchIcon, ClockIcon } from '../components/icons';
+import { SearchIcon } from '../components/icons';
 import './SearchPage.css';
 
 export default function SearchPage() {
@@ -19,7 +17,6 @@ export default function SearchPage() {
   const [genreFilter, setGenreFilter] = useState(params.get('genre') || null);
   const [typeFilter, setTypeFilter] = useState(params.get('type') || 'all');
   const [tagFilter, setTagFilter] = useState(params.get('filter') || null);
-  const [recent, setRecent] = useLocalStorage('tabie:recentSearches', []);
   const debounced = useDebouncedValue(query, 300);
 
   // The sidebar links (Movies/Series/Sports) all point at this same route with
@@ -32,12 +29,6 @@ export default function SearchPage() {
     setQuery('');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params]);
-
-  useEffect(() => {
-    if (!debounced.trim()) return;
-    setRecent((prev) => [debounced, ...prev.filter((r) => r.toLowerCase() !== debounced.toLowerCase())].slice(0, 8));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debounced]);
 
   const handleQueryChange = (value) => {
     setQuery(value);
@@ -78,29 +69,8 @@ export default function SearchPage() {
     <div className="search-page container">
       <SearchBar value={query} onChange={handleQueryChange} placeholder={t('search.placeholder')} />
 
-      {isActive && <FilterChips options={typeOptions} value={typeFilter} onChange={setTypeFilter} />}
-
       {!isActive ? (
         <div className="search-browse">
-          {recent.length > 0 && (
-            <section className="search-section">
-              <div className="search-section__head">
-                <h2>{t('search.recent')}</h2>
-                <button type="button" className="search-clear" onClick={() => setRecent([])}>
-                  {t('search.clearRecent')}
-                </button>
-              </div>
-              <div className="search-recent-chips">
-                {recent.map((term) => (
-                  <button key={term} type="button" className="search-recent-chip" onClick={() => handleQueryChange(term)}>
-                    <ClockIcon width={14} height={14} />
-                    {term}
-                  </button>
-                ))}
-              </div>
-            </section>
-          )}
-
           <section className="search-section">
             <h2>{t('search.popular')}</h2>
             <div className="search-grid">
