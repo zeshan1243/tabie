@@ -3,8 +3,7 @@ import { Link } from 'react-router-dom';
 import { useI18n } from '../i18n/I18nContext';
 import { useAppState } from '../context/AppStateContext';
 import { genreLabel } from '../data/genres';
-import Button from './Button';
-import { PlayIcon, InfoIcon, CalendarIcon, HeartIcon, CheckIcon } from './icons';
+import { PlayIcon, InfoIcon, CalendarIcon, HeartIcon, CheckIcon, StarIcon } from './icons';
 import './HeroBanner.css';
 
 const ROTATE_MS = 7500;
@@ -108,6 +107,10 @@ export default function HeroBanner({ items }) {
         ))}
         <div className="hero__scrim" />
         <div className="hero__content container">
+          <p className="hero__eyebrow">
+            <StarIcon width={13} height={13} />
+            {t('home.heroEyebrow')}
+          </p>
           <h1 className="hero__title">{item.title[lang]}</h1>
           <p className="hero__date">
             <CalendarIcon width={15} height={15} />
@@ -122,21 +125,27 @@ export default function HeroBanner({ items }) {
             ))}
           </div>
           <div className="hero__actions">
-            <Button as={Link} to={`/watch/${item.id}`} variant="primary" size="lg" icon={<PlayIcon />}>
-              {t('common.watchNow')}
-            </Button>
-            <Button as={Link} to={`/title/${item.id}`} variant="secondary" size="lg" icon={<InfoIcon />} className="hero__info-btn">
-              {t('common.moreInfo')}
-            </Button>
+            <Link to={`/watch/${item.id}`} className="hero__watch-btn">
+              <PlayIcon width={20} height={20} />
+              <span className="hero__watch-btn-text">
+                <strong>{t('common.watchNow')}</strong>
+                <small>
+                  {genreLabel(item.genres[0], lang)} · {item.year}
+                </small>
+              </span>
+            </Link>
             <button
               type="button"
-              className={`hero__save ${saved ? 'is-active' : ''}`}
+              className={`hero__icon-btn ${saved ? 'is-active' : ''}`}
               onClick={() => toggleList(item.id)}
               aria-pressed={saved}
               aria-label={saved ? t('common.removeFromList') : t('common.addToList')}
             >
               {saved ? <CheckIcon width={18} height={18} /> : <HeartIcon width={18} height={18} />}
             </button>
+            <Link to={`/title/${item.id}`} className="hero__icon-btn" aria-label={t('common.moreInfo')}>
+              <InfoIcon width={18} height={18} />
+            </Link>
           </div>
         </div>
       </div>

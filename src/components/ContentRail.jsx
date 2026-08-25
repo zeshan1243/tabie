@@ -12,10 +12,7 @@ import './ContentRail.css';
 // browse rails actually look on a phone. Kept landscape for rows where a progressMap is
 // passed (Continue Watching): a paused *scene* with a progress bar reads better than a
 // poster there. Desktop is unaffected either way.
-// ranked: shows a big outlined numeral behind each card, tucked under its start edge —
-// the "Top 10"/"Top Videos" treatment. Position is derived from the item's own index in
-// `items`, so it always matches what seeAllHref would show as #1, #2, #3…
-export default function ContentRail({ title, items = [], seeAllHref, loading = false, progressMap, variant = 'landscape', ranked = false }) {
+export default function ContentRail({ title, items = [], seeAllHref, loading = false, progressMap, variant = 'landscape' }) {
   const { t, isRtl } = useI18n();
   const trackRef = useRef(null);
   const drag = useRef({ moved: false });
@@ -119,23 +116,14 @@ export default function ContentRail({ title, items = [], seeAllHref, loading = f
         >
           {loading
             ? Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)
-            : items.map((item, i) =>
-                ranked ? (
-                  <div key={item.id} className="rail__ranked-item">
-                    <span className="rail__rank" aria-hidden="true">
-                      {i + 1}
-                    </span>
-                    <ContentCard item={item} captionInside={variant === 'portrait'} />
-                  </div>
-                ) : (
-                  <ContentCard
-                    key={item.id}
-                    item={item}
-                    progress={progressMap ? progressMap[item.id] : undefined}
-                    captionInside={variant === 'portrait'}
-                  />
-                )
-              )}
+            : items.map((item) => (
+                <ContentCard
+                  key={item.id}
+                  item={item}
+                  progress={progressMap ? progressMap[item.id] : undefined}
+                  captionInside={variant === 'portrait'}
+                />
+              ))}
         </div>
         <button type="button" className="rail__nav rail__nav--next" onClick={() => scrollBy(1)} aria-label={t('common.seeAll')}>
           <ChevronEnd />

@@ -48,6 +48,68 @@
   margin-bottom: 22px;
 }
 
+/* Mobile-only trial row — see the note in LivePage.jsx. Hidden by default; the media
+   query below is the only place it's switched on. */
+.live-page__circles {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .live-page__circles {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    padding-block: 20px 4px;
+  }
+
+  .live-page__circle {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    width: 76px;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+  }
+
+  .live-page__circle-ring {
+    display: block;
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    padding: 2.5px;
+    /* Live-red ring by default, since every channel here genuinely is live — the
+       active one steps up to gold to mark the current selection specifically. */
+    background: var(--accent-live);
+    transition: background var(--dur-fast);
+  }
+
+  .live-page__circle.is-active .live-page__circle-ring {
+    background: var(--accent-gold);
+  }
+
+  .live-page__circle-ring img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--bg-0);
+  }
+
+  .live-page__circle-name {
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    color: var(--text-primary);
+  }
+
+  .live-page__circle.is-active .live-page__circle-name {
+    color: var(--accent-gold);
+  }
+}
+
 .live-page__grid {
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;

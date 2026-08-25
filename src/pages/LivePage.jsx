@@ -35,6 +35,27 @@ export default function LivePage() {
         </div>
       </section>
 
+      {/* Mobile-only trial of a circular "now airing" row (see conversation) — each
+          channel's own current-program art in a ring, rather than its logo, since a
+          photo crops into a circle cleanly and a wordmark logo doesn't. Purely additive:
+          the existing channel list below is untouched, so this is a one-block revert if
+          it doesn't work out. */}
+      <div className="live-page__circles container">
+        {CHANNELS.map((c) => (
+          <button
+            key={c.id}
+            type="button"
+            className={`live-page__circle ${c.id === activeId ? 'is-active' : ''}`}
+            onClick={() => setActiveId(c.id)}
+          >
+            <span className="live-page__circle-ring">
+              <img src={c.thumbnail} alt="" />
+            </span>
+            <span className="live-page__circle-name line-clamp-1">{c.name[lang]}</span>
+          </button>
+        ))}
+      </div>
+
       <div className="container live-page__grid">
         <div className="live-page__channels">
           <h2 className="live-page__heading">{t('live.allChannels')}</h2>

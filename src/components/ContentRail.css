@@ -106,35 +106,6 @@
   scroll-snap-align: start;
 }
 
-/* ranked (ContentRail.jsx): a big outlined numeral tucked behind each card's start
-   edge — the "Top 10"/"Top Videos" treatment. The card overlaps the numeral rather than
-   sitting beside it, via the negative margin below, so the number reads as emerging
-   from behind the artwork instead of floating in its own separate column. */
-.rail__ranked-item {
-  position: relative;
-  display: flex;
-  align-items: flex-end;
-  flex: 0 0 auto;
-}
-
-.rail__rank {
-  flex: 0 0 auto;
-  font-size: clamp(64px, 8vw, 108px);
-  font-weight: 800;
-  font-style: italic;
-  line-height: 1;
-  color: rgba(0, 0, 0, 0.45);
-  -webkit-text-stroke: 2px var(--accent-danger);
-  padding-bottom: 4px;
-  margin-inline-end: -0.32em;
-  user-select: none;
-}
-
-.rail__ranked-item .content-card {
-  position: relative;
-  z-index: 1;
-}
-
 /* Subtle circular controls that sit on the artwork only while the row is being used,
    rather than the permanent full-height gradient strips these used to be. */
 .rail__nav {
