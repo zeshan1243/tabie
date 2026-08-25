@@ -3,14 +3,20 @@
   align-items: center;
   justify-content: center;
   aspect-ratio: 1.6 / 1;
-  padding: 18px 16px;
+  padding: 10px 16px;
   border-radius: var(--radius-md);
-  /* One shared dark tile for every channel, matching the reference layout, rather than
-     the light canvas each source logo PNG is baked onto (see data/channels.js). */
+  /* The logo images have their own flat gray canvas keyed out to transparent (see
+     data/channels.js), so the tile shows our own theme surface behind them instead. */
   background: var(--bg-elevated);
   border: 1px solid var(--border-subtle);
   overflow: hidden;
   transition: transform var(--dur-fast) var(--ease-premium), box-shadow var(--dur-fast);
+}
+
+.channel-tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .channel-tile:focus-visible {

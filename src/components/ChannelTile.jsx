@@ -2,15 +2,18 @@ import { Link } from 'react-router-dom';
 import { useI18n } from '../i18n/I18nContext';
 import './ChannelTile.css';
 
-// The source logo PNGs are baked onto an opaque white canvas, so they only ever read
-// correctly on a light tile — see the note in data/channels.js. Rendered as a text
-// wordmark on one shared dark tile color (ChannelTile.css) instead, so it works on the
-// dark theme.
+// Real broadcaster logo, background keyed out to transparent (see data/channels.js) so
+// it sits on our own theme tile — falls back to a text wordmark for a channel with no
+// logo yet.
 export default function ChannelTile({ channel }) {
   const { lang } = useI18n();
   return (
-    <Link to={`/live?channel=${channel.id}`} className="channel-tile">
-      <span className="channel-tile__name">{channel.name[lang]}</span>
+    <Link to={`/live?channel=${channel.id}`} className="channel-tile" aria-label={channel.name[lang]}>
+      {channel.logo ? (
+        <img src={channel.logo} alt="" />
+      ) : (
+        <span className="channel-tile__name">{channel.name[lang]}</span>
+      )}
     </Link>
   );
 }

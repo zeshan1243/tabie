@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect, useRef } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useI18n } from '../i18n/I18nContext';
 import { genreLabel } from '../data/genres';
@@ -10,6 +10,11 @@ import './FeaturedCarousel.css';
 export default function FeaturedCarousel({ title, items, seeAllHref }) {
   const { t, lang, isRtl } = useI18n();
   const trackRef = useRef(null);
+  const drag = useRef({ moved: false });
+  // Holds the in-flight gesture's listener cleanup, so unmounting mid-drag cannot leak it.
+  const teardown = useRef(null);
+
+  useEffect(() => () => teardown.current?.(), []);
 
   // Some browsers' native "rest" scrollLeft for a fresh RTL container lands on the wrong
   // end (see utils/rtlScroll) — without this the row opens already scrolled past its last
@@ -19,6 +24,48 @@ export default function FeaturedCarousel({ title, items, seeAllHref }) {
     if (!el || !isRtl) return;
     el.scrollLeft = rtlStartScrollLeft(el);
   }, [isRtl, items.length]);
+
+  // Mouse drag-to-scroll, same as ContentRail.jsx — this row otherwise had no way to
+  // scroll by dragging with a mouse, only via the nav buttons, unlike every other rail.
+  // See ContentRail.jsx for why the listeners live on window rather than the track.
+  const onPointerDown = (e) => {
+    const el = trackRef.current;
+    if (!el || e.pointerType === 'touch' || e.button !== 0) return;
+
+    const startX = e.clientX;
+    const startScroll = el.scrollLeft;
+    drag.current.moved = false;
+
+    const onMove = (ev) => {
+      const dx = ev.clientX - startX;
+      if (!drag.current.moved) {
+        if (Math.abs(dx) < 6) return;
+        drag.current.moved = true;
+        el.style.scrollSnapType = 'none';
+      }
+      el.scrollLeft = startScroll - dx;
+    };
+
+    const onUp = () => {
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', onUp);
+      window.removeEventListener('pointercancel', onUp);
+      teardown.current = null;
+      el.style.scrollSnapType = '';
+    };
+
+    teardown.current = onUp;
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', onUp);
+    window.addEventListener('pointercancel', onUp);
+  };
+
+  // Swallows the click that would otherwise end a drag by navigating the card underneath.
+  const onClickCapture = (e) => {
+    if (!drag.current.moved) return;
+    e.preventDefault();
+    e.stopPropagation();
+  };
 
   // Keeps the expanding card fully in view when it grows near either edge of the
   // scroll container — called once immediately and again mid-transition so the
@@ -55,7 +102,12 @@ export default function FeaturedCarousel({ title, items, seeAllHref }) {
           <ChevronStart />
         </button>
 
-        <div className="featured-carousel__track hide-scrollbar container scroll-track" ref={trackRef}>
+        <div
+          className="featured-carousel__track hide-scrollbar container scroll-track"
+          ref={trackRef}
+          onPointerDown={onPointerDown}
+          onClickCapture={onClickCapture}
+        >
           {items.map((item) => {
             const metaParts = [
               item.year,

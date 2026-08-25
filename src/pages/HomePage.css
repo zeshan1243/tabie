@@ -15,22 +15,19 @@
 
 .channels-row__grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  /* auto-fit rather than a fixed count — the channel list is 4 long right now (see
+     data/channels.js), not the 6 an earlier fixed repeat(6, 1fr) assumed, and a fixed
+     count wider than the actual item count leaves empty trailing grid tracks. */
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 14px;
-}
-
-@media (max-width: 1100px) {
-  .channels-row__grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
 }
 
 @media (max-width: 560px) {
   .channels-row__grid {
-    /* 3 columns rather than 2 — with 6 channels this lands on the same 3x2 grid as the
-       reference layout instead of a taller, narrower 2x3 one. */
-    grid-template-columns: repeat(3, 1fr);
-    gap: 5px;
+    /* Two per row — with exactly 4 channels this is a clean 2x2 rather than a lopsided
+       3+1. */
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
   }
 
   /* .container's own side padding (--container-pad, 32px+ here) is tuned for page-level

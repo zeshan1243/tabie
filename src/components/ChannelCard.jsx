@@ -8,7 +8,7 @@ export default function ChannelCard({ channel, active, onSelect }) {
   return (
     <button type="button" className={`channel-card ${active ? 'is-active' : ''}`} onClick={onSelect}>
       <div className="channel-card__logo">
-        <img src={channel.logo} alt="" />
+        {channel.logo ? <img src={channel.logo} alt="" /> : <span className="channel-card__initials">{channel.name[lang].slice(0, 3)}</span>}
       </div>
       <div className="channel-card__body">
         <p className="channel-card__name line-clamp-1">{channel.name[lang]}</p>

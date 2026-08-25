@@ -1,10 +1,22 @@
 .hero {
   position: relative;
+}
+
+/* Desktop keeps the old full-bleed cinematic hero exactly as it was — .hero__card is
+   just a wrapper around what used to be .hero's own direct children (bg/scrim/content),
+   sized and positioned the same way .hero itself used to be. Only the mobile block below
+   turns it into an inset, rounded-corner card. */
+.hero__card {
+  position: relative;
   height: min(86vh, 780px);
   min-height: 480px;
   display: flex;
   align-items: flex-end;
   overflow: hidden;
+}
+
+.hero__pills {
+  display: none;
 }
 
 .hero__bg {
@@ -71,6 +83,13 @@
   margin-bottom: 18px;
 }
 
+/* Mobile-only replacements for .hero__meta (a calendar row) and a tag-pill breakdown of
+   the genres .hero__meta otherwise folds into one line — both hidden here, shown below. */
+.hero__date,
+.hero__tags {
+  display: none;
+}
+
 .hero__synopsis {
   font-size: 15px;
   line-height: 1.65;
@@ -83,6 +102,27 @@
   display: flex;
   gap: 14px;
   flex-wrap: wrap;
+}
+
+/* Mobile-only save toggle beside the actions row — reuses the same My List state as
+   every content card's own save button, just styled as a square icon button here. */
+.hero__save {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  border-radius: var(--radius-md);
+  border: none;
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  transition: background var(--dur-fast), color var(--dur-fast);
+}
+
+.hero__save.is-active {
+  background: var(--accent-teal);
+  color: #04231f;
 }
 
 .hero__dots {
@@ -109,13 +149,101 @@
 }
 
 @media (max-width: 640px) {
-  .hero {
-    height: 78vh;
+  /* Genre filter pills above the card — each on its own accent color (--pill-color,
+     set inline per genre in HeroBanner.jsx); only the one matching the current slide's
+     genre is filled, the rest sit as outline pills. */
+  .hero__pills {
+    display: flex;
+    gap: 8px;
+    padding: 14px 16px 12px;
+    overflow-x: auto;
   }
-  .hero__dots {
+
+  .hero__pill {
+    flex: 0 0 auto;
+    padding: 8px 16px;
+    border-radius: var(--radius-pill);
+    border: 1.5px solid var(--pill-color);
+    color: var(--pill-color);
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+    transition: background var(--dur-fast), color var(--dur-fast);
+  }
+
+  .hero__pill.is-active {
+    background: var(--pill-color);
+    color: #fff;
+  }
+
+  /* The card itself: inset from the screen edges with real corners, rather than the
+     full-bleed edge-to-edge treatment desktop keeps. */
+  .hero__card {
+    height: 56vh;
+    min-height: 420px;
+    margin-inline: 16px;
+    border-radius: 20px;
+  }
+
+  .hero__content {
+    padding: 20px 18px;
+    max-width: none;
+  }
+
+  .hero__eyebrow,
+  .hero__meta {
     display: none;
   }
+
+  .hero__date {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 600;
+    font-style: italic;
+    margin-bottom: 14px;
+  }
+
+  .hero__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+
+  .hero__tag {
+    padding: 5px 12px;
+    border-radius: var(--radius-pill);
+    background: rgba(255, 255, 255, 0.14);
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .hero__actions {
+    gap: 10px;
+  }
+
+  /* The "more info" pill collapses to just its icon on the card's tighter width — the
+     label would otherwise force the row to wrap against the save button. */
+  .hero__info-btn .btn__label {
+    display: none;
+  }
+
+  .hero__save {
+    display: flex;
+  }
+
   .hero__synopsis {
     display: none;
+  }
+
+  /* Below the card rather than overlaid on it, and re-enabled (desktop already shows
+     these; the old mobile rule turned them off entirely). */
+  .hero__dots {
+    position: static;
+    justify-content: center;
+    margin-top: 14px;
   }
 }

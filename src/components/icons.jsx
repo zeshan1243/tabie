@@ -148,6 +148,19 @@ export const ClockIcon = (p) => (
   </svg>
 );
 
+export const CalendarIcon = (p) => (
+  <svg {...base} {...p}>
+    <rect x="3.5" y="5" width="17" height="16" rx="2.5" />
+    <path d="M3.5 9.5h17M8 3v4M16 3v4" />
+  </svg>
+);
+
+export const HeartIcon = (p) => (
+  <svg {...base} {...p}>
+    <path d="M12 20.2s-7.6-4.6-9.8-9.3C.6 7.4 2.4 4 5.9 4c2 0 3.4 1 4.7 2.6l1.4 1.7 1.4-1.7C14.7 5 16.1 4 18.1 4c3.5 0 5.3 3.4 3.7 6.9-2.2 4.7-9.8 9.3-9.8 9.3z" />
+  </svg>
+);
+
 export const ShareIcon = (p) => (
   <svg {...base} {...p}>
     <circle cx="18" cy="5" r="2.4" />

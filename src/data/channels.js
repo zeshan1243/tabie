@@ -1,24 +1,18 @@
 import realThumbnails from './realThumbnails.json';
-import aljazeeraLogo from '../assets/channels/aljazeera-tv.png';
-import alkassLogo from '../assets/channels/alkass-tv.png';
-import alrayyanLogo from '../assets/channels/alrayyan-tv.png';
-import beinLogo from '../assets/channels/bein-tv.png';
-import qatarTvLogo from '../assets/channels/q-tv.png';
-import qatarTv2Logo from '../assets/channels/q-tv2.png';
+import qatarTvLogo from '../assets/channels/qtv.png';
+import qbcLogo from '../assets/channels/qbc.png';
+import beinLogo from '../assets/channels/bein.png';
+import alkassLogo from '../assets/channels/alkass.png';
 
 // Offset into the real-thumbnail pool so channel art doesn't repeat the catalog's picks.
 const CHANNEL_THUMB_OFFSET = 60;
 
-// Each logo PNG is a real broadcaster asset baked onto an opaque white canvas (not
-// transparent), so it only ever reads correctly on a light tile — which is why the
-// channel grid forced one. Rendered as a text wordmark instead (see ChannelTile), on one
-// shared dark tile color (set in ChannelTile.css) rather than per-channel color, matching
-// the reference layout where every tile shares the same background.
+// The .png files are the original broadcaster assets (see the sibling .jpg/.jpeg) with
+// their flat mid-gray canvas keyed out to transparency, so they sit on our own theme
+// surface (ChannelTile.css / ChannelCard.css) instead of carrying their own background.
 const CHANNEL_DEFS = [
   { id: 'ch-qatar-tv', en: 'Qatar TV', ar: 'قطر', logo: qatarTvLogo },
-  { id: 'ch-qatar-tv2', en: 'Qatar TV 2', ar: 'قطر 2', logo: qatarTv2Logo },
-  { id: 'ch-aljazeera', en: 'Al Jazeera', ar: 'الجزيرة', logo: aljazeeraLogo },
-  { id: 'ch-alrayyan', en: 'Al Rayyan', ar: 'الريان', logo: alrayyanLogo },
+  { id: 'ch-qbc', en: 'QBC', ar: 'كيو بي سي', logo: qbcLogo },
   { id: 'ch-beinsports', en: 'beIN Sports', ar: 'بي إن سبورتس', logo: beinLogo },
   { id: 'ch-alkass', en: 'Al Kass', ar: 'الكأس', logo: alkassLogo },
 ];

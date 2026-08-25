@@ -7,7 +7,15 @@ import SkeletonCard from './SkeletonCard';
 import { ChevronStart, ChevronEnd } from './icons';
 import './ContentRail.css';
 
-export default function ContentRail({ title, items = [], seeAllHref, loading = false, progressMap }) {
+// variant="portrait": on mobile only, cards switch to a 2/3 poster (like the search
+// grid) instead of the 16/9 backdrop — denser and closer to how Disney+/Netflix/Prime
+// browse rails actually look on a phone. Kept landscape for rows where a progressMap is
+// passed (Continue Watching): a paused *scene* with a progress bar reads better than a
+// poster there. Desktop is unaffected either way.
+// ranked: shows a big outlined numeral behind each card, tucked under its start edge —
+// the "Top 10"/"Top Videos" treatment. Position is derived from the item's own index in
+// `items`, so it always matches what seeAllHref would show as #1, #2, #3…
+export default function ContentRail({ title, items = [], seeAllHref, loading = false, progressMap, variant = 'landscape', ranked = false }) {
   const { t, isRtl } = useI18n();
   const trackRef = useRef(null);
   const drag = useRef({ moved: false });
@@ -90,7 +98,7 @@ export default function ContentRail({ title, items = [], seeAllHref, loading = f
   if (!loading && items.length === 0) return null;
 
   return (
-    <section className="rail">
+    <section className={`rail${variant === 'portrait' ? ' rail--portrait' : ''}`}>
       <div className="rail__header container">
         <h2 className="rail__title">{title}</h2>
         {seeAllHref && (
@@ -111,9 +119,23 @@ export default function ContentRail({ title, items = [], seeAllHref, loading = f
         >
           {loading
             ? Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)
-            : items.map((item) => (
-                <ContentCard key={item.id} item={item} progress={progressMap ? progressMap[item.id] : undefined} />
-              ))}
+            : items.map((item, i) =>
+                ranked ? (
+                  <div key={item.id} className="rail__ranked-item">
+                    <span className="rail__rank" aria-hidden="true">
+                      {i + 1}
+                    </span>
+                    <ContentCard item={item} captionInside={variant === 'portrait'} />
+                  </div>
+                ) : (
+                  <ContentCard
+                    key={item.id}
+                    item={item}
+                    progress={progressMap ? progressMap[item.id] : undefined}
+                    captionInside={variant === 'portrait'}
+                  />
+                )
+              )}
         </div>
         <button type="button" className="rail__nav rail__nav--next" onClick={() => scrollBy(1)} aria-label={t('common.seeAll')}>
           <ChevronEnd />

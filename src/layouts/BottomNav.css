@@ -11,8 +11,30 @@
     z-index: 100;
     background: rgba(6, 10, 30, 0.94);
     backdrop-filter: blur(16px);
-    border-top: 1px solid var(--border-subtle);
     padding: 8px 4px calc(8px + env(safe-area-inset-bottom));
+  }
+
+  /* The colored top edge replaces the plain border-top — one segment per tab, in tab
+     order starting from Home, each tinted with its own assigned color. Only the active
+     tab's segment shows that color at full strength; the rest sit dim so the current
+     section reads clearly at a glance. */
+  .bottom-nav__segments {
+    position: absolute;
+    top: 0;
+    inset-inline: 0;
+    height: 3px;
+    display: flex;
+  }
+
+  .bottom-nav__segment {
+    flex: 1;
+    background: var(--segment-color);
+    opacity: 0.28;
+    transition: opacity var(--dur-fast) var(--ease-premium);
+  }
+
+  .bottom-nav__segment.is-active {
+    opacity: 1;
   }
 
   .bottom-nav__link {
@@ -24,10 +46,15 @@
     font-size: 10px;
     font-weight: 600;
     color: var(--text-tertiary);
-    padding: 4px;
+    padding: 6px 4px;
+    border-radius: var(--radius-md);
+    transition: background var(--dur-fast) var(--ease-premium), color var(--dur-fast) var(--ease-premium);
   }
 
+  /* Fills the whole tab with its assigned color (--tab-color, set per-link in JSX) —
+     the same mapping the top segment bar above uses — rather than just tinting the icon. */
   .bottom-nav__link.is-active {
-    color: var(--accent-gold);
+    background: var(--tab-color);
+    color: var(--tab-text);
   }
 }
