@@ -15,17 +15,22 @@
 
 .channels-row__grid {
   display: grid;
-  /* auto-fit rather than a fixed count — the channel list is 4 long right now (see
-     data/channels.js), not the 6 an earlier fixed repeat(6, 1fr) assumed, and a fixed
-     count wider than the actual item count leaves empty trailing grid tracks. */
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 14px;
+  /* Bounded-flexible tracks: each column grows to fill the row like a normal 1fr grid,
+     but stops at 180px instead of continuing to stretch — a plain minmax(x, 1fr) has no
+     upper bound, which is what let 4 channels (see data/channels.js) balloon to ~310px
+     wide each on a desktop screen. Capping the track itself (rather than a fixed size,
+     or a max-width on the tile) is what lets it both fill the row *and* wrap in more
+     columns as the row gets wider, instead of leaving dead space past a fixed count. */
+  grid-template-columns: repeat(auto-fit, minmax(130px, 180px));
+  gap: 10px;
 }
 
 @media (max-width: 560px) {
   .channels-row__grid {
-    /* Two per row — with exactly 4 channels this is a clean 2x2 rather than a lopsided
-       3+1. */
+    /* Two even 1fr columns — genuinely fills the row's width (no leftover dead strip),
+       with exactly 4 channels landing on a clean 2x2. The tile stays visually compact
+       via its own short aspect-ratio and generous padding (ChannelTile.css) rather than
+       a capped track width, since capping the track here is what left the dead gap. */
     grid-template-columns: repeat(2, 1fr);
     gap: 8px;
   }

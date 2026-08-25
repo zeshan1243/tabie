@@ -2,8 +2,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  aspect-ratio: 1.6 / 1;
-  padding: 10px 16px;
+  aspect-ratio: 2.2 / 1;
+  padding: 16px 20px;
   border-radius: var(--radius-md);
   /* The logo images have their own flat gray canvas keyed out to transparent (see
      data/channels.js), so the tile shows our own theme surface behind them instead. */
@@ -32,7 +32,7 @@
 }
 
 .channel-tile__name {
-  font-size: clamp(13px, 1.6vw, 16px);
+  font-size: clamp(11px, 1.3vw, 14px);
   font-weight: 700;
   color: #fff;
   text-align: center;
