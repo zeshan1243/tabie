@@ -2,16 +2,19 @@ import { useEffect, useState, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useI18n } from '../i18n/I18nContext';
 import { useAppState } from '../context/AppStateContext';
+import { useIsMobile } from '../hooks/useIsMobile';
 import { genreLabel } from '../data/genres';
 import { PlayIcon, InfoIcon, CalendarIcon, HeartIcon, CheckIcon, StarIcon } from './icons';
 import './HeroBanner.css';
 
 const ROTATE_MS = 7500;
 const SWIPE_THRESHOLD = 40;
+const MOBILE_STEP_VW = 78; // distance (in vw) between two peek-card centers
 
 export default function HeroBanner({ items }) {
   const { t, lang } = useI18n();
   const { isInList, toggleList } = useAppState();
+  const isMobile = useIsMobile();
   const [index, setIndex] = useState(0);
   const item = items[index];
   // Holds the in-flight mouse-drag gesture's own listener cleanup (see onPointerDown).
@@ -89,9 +92,181 @@ export default function HeroBanner({ items }) {
     e.stopPropagation();
   };
 
+  // --- mobile peek-carousel: a live "follows your finger" drag (unlike the desktop
+  // card's release-only swipe above), so the track visibly tracks the touch/pointer
+  // before snapping to the nearest slide. `moved` lives in a ref (not state) so the
+  // click-swallow guard below reads a value that's current at click time — a state
+  // flag flipped in the same pointerup handler isn't guaranteed to have committed
+  // before the browser's own synthetic click fires right after.
+  const [mobileDrag, setMobileDrag] = useState({ active: false, dx: 0 });
+  const mobileStartX = useRef(0);
+  const mobileMoved = useRef(false);
+
+  const mobileDragStart = (clientX) => {
+    mobileStartX.current = clientX;
+    mobileMoved.current = false;
+    setMobileDrag({ active: true, dx: 0 });
+  };
+  const mobileDragMove = (clientX) => {
+    const dx = clientX - mobileStartX.current;
+    if (Math.abs(dx) >= 6) mobileMoved.current = true;
+    setMobileDrag((prev) => (prev.active ? { active: true, dx } : prev));
+  };
+  const mobileDragEnd = (clientX) => {
+    const dx = clientX - mobileStartX.current;
+    setMobileDrag({ active: false, dx: 0 });
+    step(dx);
+  };
+
+  const onMobileTouchStart = (e) => mobileDragStart(e.touches[0].clientX);
+  const onMobileTouchMove = (e) => mobileDragMove(e.touches[0].clientX);
+  const onMobileTouchEnd = (e) => mobileDragEnd(e.changedTouches[0].clientX);
+
+  // A card's click is only ever swallowed right after a real drag — reset on the
+  // next pointerdown so a plain tap still opens the details page normally.
+  const onMobileCardClickCapture = (e) => {
+    if (!mobileMoved.current) return;
+    mobileMoved.current = false;
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  // Mouse-drag parity with the desktop card, for anyone testing the mobile layout
+  // with a mouse (resized browser, devtools device mode, etc).
+  const mobileTeardown = useRef(null);
+  const onMobilePointerDown = (e) => {
+    if (e.pointerType === 'touch' || e.button !== 0) return;
+    mobileDragStart(e.clientX);
+
+    const onMove = (ev) => mobileDragMove(ev.clientX);
+    const onUp = (ev) => {
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', onUp);
+      window.removeEventListener('pointercancel', onCancel);
+      mobileTeardown.current = null;
+      mobileDragEnd(ev.clientX);
+    };
+    const onCancel = () => {
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', onUp);
+      window.removeEventListener('pointercancel', onCancel);
+      mobileTeardown.current = null;
+      setMobileDrag({ active: false, dx: 0 });
+    };
+
+    mobileTeardown.current = onCancel;
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', onUp);
+    window.addEventListener('pointercancel', onCancel);
+  };
+
+  useEffect(() => () => mobileTeardown.current?.(), []);
+
   if (!item) return null;
 
   const saved = isInList(item.id);
+
+  if (isMobile) {
+    const metaLine = [
+      item.year,
+      genreLabel(item.genres[0], lang),
+      item.rating,
+      item.seasons ? `${item.seasons} ${t('common.seasons')}` : item.duration ? `${item.duration} ${t('common.minutes')}` : null,
+    ]
+      .filter(Boolean)
+      .join('  •  ');
+
+    return (
+      <section className="hero hero-m" aria-label={item.title[lang]}>
+        {items.map((slide, i) => (
+          <div
+            key={slide.id}
+            className={`hero-m__ambient ${i === index ? 'is-active' : ''}`}
+            style={{ backgroundImage: `url("${slide.backdrop}")` }}
+          />
+        ))}
+        <div className="hero-m__ambient-scrim" />
+
+        <div
+          className="hero-m__track"
+          onTouchStart={onMobileTouchStart}
+          onTouchMove={onMobileTouchMove}
+          onTouchEnd={onMobileTouchEnd}
+          onPointerDown={onMobilePointerDown}
+        >
+          {items.map((slide, i) => {
+            const offset = i - index;
+            const active = offset === 0;
+            // translateX is a physical transform — unlike a logical property, it does
+            // not auto-mirror under dir="rtl", so the offset sign is flipped here:
+            // "next" moves toward the left, matching every other RTL-swipeable row in
+            // this app (see ContentRail's own RTL handling).
+            const rtlOffset = -offset * MOBILE_STEP_VW;
+            return (
+              <Link
+                key={slide.id}
+                to={`/title/${slide.id}`}
+                className="hero-m__card"
+                draggable="false"
+                onClickCapture={onMobileCardClickCapture}
+                style={{
+                  transform: `translateX(calc(-50% + ${rtlOffset}vw${mobileDrag.active ? ` + ${mobileDrag.dx}px` : ''})) scale(${active ? 1 : 0.86})`,
+                  transition: mobileDrag.active ? 'none' : undefined,
+                  zIndex: active ? 2 : 1,
+                }}
+              >
+                <img src={slide.backdrop} alt="" className="hero-m__card-img" draggable="false" />
+                <span className={`hero-m__card-dim ${active ? '' : 'is-dim'}`} />
+              </Link>
+            );
+          })}
+        </div>
+
+        <div className="hero-m__content" key={item.id}>
+          <p className="hero-m__eyebrow">
+            <StarIcon width={12} height={12} />
+            {t('home.heroEyebrow')}
+          </p>
+          <h1 className="hero-m__title line-clamp-1">{item.title[lang]}</h1>
+          <p className="hero-m__meta">{metaLine}</p>
+          <p className="hero-m__synopsis line-clamp-1">{item.synopsis[lang]}</p>
+
+          <div className="hero-m__actions">
+            <Link to={`/watch/${item.id}`} className="hero-m__watch-btn">
+              <PlayIcon width={16} height={16} />
+              {t('common.watchNow')}
+            </Link>
+            <button
+              type="button"
+              className={`hero__icon-btn hero-m__icon-btn ${saved ? 'is-active' : ''}`}
+              onClick={() => toggleList(item.id)}
+              aria-pressed={saved}
+              aria-label={saved ? t('common.removeFromList') : t('common.addToList')}
+            >
+              {saved ? <CheckIcon width={16} height={16} /> : <HeartIcon width={16} height={16} />}
+            </button>
+            <Link to={`/title/${item.id}`} className="hero__icon-btn hero-m__icon-btn" aria-label={t('common.moreInfo')}>
+              <InfoIcon width={16} height={16} />
+            </Link>
+          </div>
+
+          {items.length > 1 && (
+            <div className="hero__dots hero-m__dots">
+              {items.map((slide, i) => (
+                <button
+                  key={slide.id}
+                  type="button"
+                  className={`hero__dot ${i === index ? 'is-active' : ''}`}
+                  aria-label={slide.title[lang]}
+                  onClick={() => goTo(i)}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="hero" aria-label={item.title[lang]}>

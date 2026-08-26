@@ -207,8 +207,10 @@ const KIDS = generateFiller(20, 'kids', ['kids', 'family', 'comedy'], {}).map((i
 
 export const CATALOG = [...ANCHOR_ITEMS, ...MOVIES, ...SERIES.filter((i) => !ANCHOR_ITEMS.includes(i)), ...PROGRAMS.filter((i) => !ANCHOR_ITEMS.includes(i)), ...DOCUMENTARIES.filter((i) => !ANCHOR_ITEMS.includes(i)), ...KIDS];
 
-export const HERO_ITEMS = ANCHOR_ITEMS.filter((i) => i.tags.includes('hero'));
 export const TRENDING = CATALOG.filter((i) => i.tags.includes('trending'));
+const heroTagged = ANCHOR_ITEMS.filter((i) => i.tags.includes('hero'));
+const heroIds = new Set(heroTagged.map((i) => i.id));
+export const HERO_ITEMS = heroTagged.concat(TRENDING.filter((i) => !heroIds.has(i.id))).slice(0, 6);
 export const MOST_WATCHED = CATALOG.filter((i) => i.tags.includes('mostWatched'));
 export const NEW_RELEASES = CATALOG.filter((i) => i.tags.includes('newRelease'));
 const recommendedTagged = CATALOG.filter((i) => i.tags.includes('recommended'));
